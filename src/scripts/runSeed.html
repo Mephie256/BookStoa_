@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Seeder - Pneuma BookStore</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        h1 {
+            color: #11b53f;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #9ca3af;
+            margin-bottom: 30px;
+        }
+        .button {
+            background: #11b53f;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.2s;
+        }
+        .button:hover {
+            background: #0f9d3a;
+            transform: translateY(-1px);
+        }
+        .button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .log {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Database Seeder</h1>
+        <p class="subtitle">Add 10 sample Christian books to your Pneuma BookStore database</p>
+        
+        <button id="seedBtn" class="button" onclick="seedDatabase()">
+            🌱 Seed Database with Sample Books
+        </button>
+        
+        <button id="clearBtn" class="button" onclick="clearLog()" style="background: #6b7280;">
+            🗑️ Clear Log
+        </button>
+        
+        <div id="log" class="log" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api'; // Adjust this to your API URL
+        
+        const sampleBooks = [
+            {
+                title: 'The Purpose Driven Life',
+                author: 'Rick Warren',
+                genre: 'Christian Living',
+                category: 'Christian Living',
+                description: 'A groundbreaking manifesto on the meaning of life that has inspired millions of readers worldwide.',
+                pages: 334,
+                rating: 4.8,
+                total_ratings: 1247,
+                published_date: '2002-10-01',
+                language: 'English',
+                isbn: '9780310205715',
+                tags: ['Purpose', 'Life', 'Spiritual Growth', 'Bestseller'],
+                cover_file_url: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1320532872i/4063.jpg',
+                pdf_file_url: 'https://example.com/purpose-driven-life.pdf',
+                audioLink: 'https://example.com/audio/purpose-driven-life.mp3'
+            },
+            {
+                title: 'Jesus Calling',
+                author: 'Sarah Young',
+                genre: 'Devotional',
+                category: 'Devotional',
+                description: 'Experience peace in the presence of the Savior who is always with you.',
+                pages: 400,
+                rating: 4.9,
+                total_ratings: 892,
+                published_date: '2004-10-01',
+                language: 'English',
+                isbn: '9781591451884',
+                tags: ['Devotional', 'Daily Reading', 'Peace', 'Comfort'],
+                cover_file_url: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1320552628i/8186808.jpg',
+                pdf_file_url: 'https://example.com/jesus-calling.pdf'
+            },
+            // Add more books here if needed...
+        ];
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            logDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logDiv.style.display = 'block';
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('log').style.display = 'none';
+        }
+
+        async function seedDatabase() {
+            const seedBtn = document.getElementById('seedBtn');
+            seedBtn.disabled = true;
+            seedBtn.textContent = '🌱 Seeding Database...';
+            
+            log('🌱 Starting database seeding...', 'info');
+            
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (const book of sampleBooks) {
+                try {
+                    log(`📚 Adding: ${book.title} by ${book.author}`, 'info');
+                    
+                    const response = await fetch(`${API_BASE_URL}/books`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(book)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                        successCount++;
+                        log(`✅ Successfully added: ${book.title}`, 'success');
+                    } else {
+                        errorCount++;
+                        log(`❌ Failed to add: ${book.title} - ${result.error || 'Unknown error'}`, 'error');
+                    }
+                } catch (error) {
+                    errorCount++;
+                    log(`❌ Error adding ${book.title}: ${error.message}`, 'error');
+                }
+                
+                // Small delay to avoid overwhelming the API
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            log(`\n🎉 Seeding complete!`, 'info');
+            log(`✅ Successfully added: ${successCount} books`, 'success');
+            log(`❌ Failed to add: ${errorCount} books`, errorCount > 0 ? 'error' : 'info');
+            
+            seedBtn.disabled = false;
+            seedBtn.textContent = '🌱 Seed Database with Sample Books';
+        }
+    </script>
+</body>
+</html>

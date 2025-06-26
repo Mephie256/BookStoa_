@@ -1,0 +1,184 @@
+{
+    "design_system": {
+      "colors": {
+        "primary_background": "#f8f9fa",
+        "sidebar_background": "#ffffff",
+        "content_background": "#ffffff",
+        "text_primary": "#1a1a1a",
+        "text_secondary": "#6b7280",
+        "accent_blue": "#3b82f6",
+        "border_light": "#e5e7eb",
+        "card_shadow": "rgba(0, 0, 0, 0.05)"
+      },
+      "typography": {
+        "font_family": "system-ui, -apple-system, sans-serif",
+        "heading_large": "24px bold",
+        "heading_medium": "18px semibold",
+        "body_text": "14px regular",
+        "small_text": "12px regular"
+      },
+      "spacing": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "xl": "32px"
+      },
+      "border_radius": {
+        "small": "6px",
+        "medium": "8px",
+        "large": "12px",
+        "circle": "50%"
+      }
+    },
+    "layout": {
+      "structure": "two_column",
+      "sidebar": {
+        "width": "280px",
+        "background": "sidebar_background",
+        "padding": "24px 16px"
+      },
+      "main_content": {
+        "background": "primary_background",
+        "padding": "24px 32px"
+      }
+    },
+    "components": {
+      "sidebar": {
+        "user_profile": {
+          "avatar": {
+            "size": "40px",
+            "border_radius": "circle",
+            "margin_right": "12px"
+          },
+          "user_info": {
+            "name": "16px semibold",
+            "plan": "12px text_secondary"
+          }
+        },
+        "navigation": {
+          "item_height": "44px",
+          "item_padding": "12px 16px",
+          "border_radius": "medium",
+          "active_background": "rgba(59, 130, 246, 0.1)",
+          "hover_background": "rgba(0, 0, 0, 0.05)",
+          "text_color": "text_primary",
+          "icon_size": "16px"
+        },
+        "current_listening": {
+          "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          "border_radius": "large",
+          "padding": "16px",
+          "text_color": "white",
+          "play_button": {
+            "size": "32px",
+            "background": "rgba(255, 255, 255, 0.2)",
+            "border_radius": "circle"
+          }
+        }
+      },
+      "main_header": {
+        "title": "heading_large",
+        "search_bar": {
+          "width": "320px",
+          "height": "40px",
+          "background": "rgba(255, 255, 255, 0.8)",
+          "border_radius": "large",
+          "padding": "0 16px",
+          "placeholder_color": "text_secondary"
+        }
+      },
+      "book_cards": {
+        "grid": {
+          "columns": 5,
+          "gap": "16px"
+        },
+        "card": {
+          "width": "140px",
+          "background": "content_background",
+          "border_radius": "medium",
+          "padding": "12px",
+          "shadow": "0 2px 8px card_shadow",
+          "hover_transform": "translateY(-2px)"
+        },
+        "book_cover": {
+          "width": "116px",
+          "height": "160px",
+          "border_radius": "small",
+          "margin_bottom": "12px"
+        },
+        "book_title": {
+          "font_size": "14px",
+          "font_weight": "semibold",
+          "line_height": "1.3",
+          "margin_bottom": "4px"
+        },
+        "rating": {
+          "display": "flex",
+          "align_items": "center",
+          "gap": "4px",
+          "star_color": "#fbbf24",
+          "star_size": "12px",
+          "text_size": "12px"
+        }
+      },
+      "exclusives_card": {
+        "background": "content_background",
+        "border_radius": "large",
+        "padding": "24px",
+        "shadow": "0 4px 12px card_shadow",
+        "layout": "flex",
+        "gap": "20px",
+        "book_cover": {
+          "width": "80px",
+          "height": "120px",
+          "border_radius": "small"
+        },
+        "content": {
+          "title": "18px semibold",
+          "author": "14px text_secondary",
+          "rating": "12px",
+          "tags": {
+            "background": "rgba(59, 130, 246, 0.1)",
+            "color": "accent_blue",
+            "padding": "4px 8px",
+            "border_radius": "small",
+            "font_size": "12px"
+          }
+        }
+      },
+      "section_headers": {
+        "display": "flex",
+        "justify_content": "space_between",
+        "align_items": "center",
+        "margin_bottom": "20px",
+        "navigation_arrows": {
+          "size": "32px",
+          "background": "rgba(0, 0, 0, 0.05)",
+          "border_radius": "circle",
+          "gap": "8px"
+        }
+      }
+    },
+    "interactions": {
+      "hover_effects": {
+        "book_cards": "transform: translateY(-2px); shadow: 0 4px 16px rgba(0, 0, 0, 0.1)",
+        "nav_items": "background: rgba(0, 0, 0, 0.05)",
+        "buttons": "opacity: 0.8"
+      },
+      "transitions": {
+        "all_elements": "all 0.2s ease-in-out"
+      }
+    },
+    "responsive": {
+      "tablet": {
+        "sidebar_width": "240px",
+        "book_grid_columns": 4
+      },
+      "mobile": {
+        "layout": "single_column",
+        "sidebar": "bottom_navigation",
+        "book_grid_columns": 2
+      }
+    }
+  }
