@@ -10,6 +10,7 @@ import { ToastProvider } from './contexts/ToastContext';
 import GlobalAudioPlayer from './components/GlobalAudioPlayer';
 import MobileHeader from './components/MobileHeader';
 import Sidebar from './components/Sidebar';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import Home from './pages/Home';
 import BookDetail from './pages/BookDetail';
 import Search from './pages/Search';
@@ -99,6 +100,9 @@ function App() {
           
           {/* Global Sidebar - appears on all pages */}
           <Sidebar />
+          
+          {/* PWA Install Prompt */}
+          <PWAInstallPrompt />
           
           <Routes>
             <Route path="/" element={<Home />} />
