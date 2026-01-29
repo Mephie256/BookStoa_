@@ -313,7 +313,7 @@ const UploadBook = () => {
         <div className="flex items-center mb-8">
           <Link
             to="/admin"
-            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/30"
+            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 px-4 py-2 rounded-xl border border-gray-700/30"
             style={{color: '#11b53f'}}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -347,7 +347,7 @@ const UploadBook = () => {
                     value={formData.title}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="Enter book title"
                   />
                 </div>
@@ -363,7 +363,7 @@ const UploadBook = () => {
                     value={formData.author}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="Enter author name"
                   />
                 </div>
@@ -380,7 +380,7 @@ const UploadBook = () => {
                   onChange={handleInputChange}
                   required
                   rows={3}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                   placeholder="Brief description for book cards"
                 />
               </div>
@@ -396,7 +396,7 @@ const UploadBook = () => {
                   onChange={handleInputChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                   placeholder="Detailed description for book detail page"
                 />
               </div>
@@ -419,7 +419,7 @@ const UploadBook = () => {
                     value={formData.genre}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                   >
                     <option value="">Select Genre</option>
                     {genres.map(genre => (
@@ -439,7 +439,7 @@ const UploadBook = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                   >
                     <option value="">Select Category</option>
                     {categories.map(category => (
@@ -471,7 +471,7 @@ const UploadBook = () => {
                             setNewTag('');
                           }
                         }}
-                        className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                        className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                         placeholder="Add tags (press Enter)"
                       />
                     </div>
@@ -527,7 +527,7 @@ const UploadBook = () => {
                     name="publisher"
                     value={formData.publisher}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="Publisher name"
                   />
                 </div>
@@ -544,7 +544,7 @@ const UploadBook = () => {
                       name="publishedDate"
                       value={formData.publishedDate}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     />
                   </div>
                 </div>
@@ -561,7 +561,7 @@ const UploadBook = () => {
                       name="isbn"
                       value={formData.isbn}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                       placeholder="978-0-123456-78-9"
                     />
                   </div>
@@ -579,7 +579,7 @@ const UploadBook = () => {
                       value={formData.language}
                       onChange={handleInputChange}
                       required
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     >
                       {languages.map(language => (
                         <option key={language} value={language} className="bg-gray-800">
@@ -603,7 +603,7 @@ const UploadBook = () => {
                       value={formData.pages}
                       onChange={handleInputChange}
                       min="1"
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                       placeholder="Number of pages"
                     />
                   </div>
@@ -633,7 +633,7 @@ const UploadBook = () => {
                       min="0"
                       max="5"
                       step="0.1"
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                       placeholder="4.5"
                     />
                   </div>
@@ -650,7 +650,7 @@ const UploadBook = () => {
                     value={formData.totalRatings}
                     onChange={handleInputChange}
                     min="0"
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="1247"
                   />
                 </div>
@@ -676,7 +676,7 @@ const UploadBook = () => {
                       name="audioLink"
                       value={formData.audioLink}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                       placeholder="https://example.com/audiobook.mp3"
                     />
                   </div>
@@ -693,7 +693,7 @@ const UploadBook = () => {
                     name="previewLink"
                     value={formData.previewLink}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="https://example.com/preview"
                   />
                   <p className="text-xs text-gray-400 mt-1">Link to book preview or sample</p>
@@ -735,7 +735,7 @@ const UploadBook = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="1000"
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                       placeholder="10000"
                     />
                     <p className="text-xs text-gray-400 mt-1">Enter price in Ugandan Shillings (UGX)</p>
@@ -927,3 +927,4 @@ const UploadBook = () => {
 };
 
 export default UploadBook;
+

@@ -100,7 +100,7 @@ const UsersManagement = () => {
         <div className="flex items-center mb-8">
           <Link
             to="/admin"
-            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/30"
+            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 px-4 py-2 rounded-xl border border-gray-700/30"
             style={{color: '#11b53f'}}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -123,7 +123,7 @@ const UsersManagement = () => {
                   placeholder="Search users by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 />
               </div>
             </div>
@@ -133,7 +133,7 @@ const UsersManagement = () => {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 >
                   <option value="all" className="bg-gray-800">All Status</option>
                   <option value="active" className="bg-gray-800">Active</option>
@@ -170,7 +170,7 @@ const UsersManagement = () => {
           ) : (
             <div className="space-y-4">
             {filteredUsers.map((user) => (
-              <div key={user.id} className="bg-gray-700/30 backdrop-blur-sm rounded-xl p-6 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
+              <div key={user.id} className="bg-gray-700/30 rounded-xl p-6 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <UserAvatar user={user} size="md" />
@@ -256,3 +256,4 @@ const UsersManagement = () => {
 };
 
 export default UsersManagement;
+

@@ -172,7 +172,7 @@ const BooksManagement = () => {
         <div className="flex items-center mb-8">
           <Link
             to="/admin"
-            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/30"
+            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 px-4 py-2 rounded-xl border border-gray-700/30"
             style={{color: '#11b53f'}}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -202,7 +202,7 @@ const BooksManagement = () => {
                   placeholder="Search books by title or author..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 />
               </div>
             </div>
@@ -212,7 +212,7 @@ const BooksManagement = () => {
                 <select
                   value={filterGenre}
                   onChange={(e) => setFilterGenre(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 >
                   {genres.map(genre => (
                     <option key={genre} value={genre} className="bg-gray-800">
@@ -253,7 +253,7 @@ const BooksManagement = () => {
           ) : filteredBooks.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBooks.map((book) => (
-                <div key={book.id} className="bg-gray-700/30 backdrop-blur-sm rounded-xl p-4 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
+                <div key={book.id} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
                   <div className="flex gap-4">
                     <img
                       src={book.cover_file_url || book.coverUrl || book.cover_url || book.image_url || 'https://via.placeholder.com/64x80/11b53f/ffffff?text=📖'}
@@ -340,3 +340,4 @@ const BooksManagement = () => {
 };
 
 export default BooksManagement;
+

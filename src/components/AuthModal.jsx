@@ -177,7 +177,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'login' }) => {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     required
-                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="First name"
                   />
                 </div>
@@ -195,7 +195,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'login' }) => {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     required
-                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                     placeholder="Last name"
                   />
                 </div>
@@ -216,7 +216,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'login' }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 placeholder="Enter your email"
               />
             </div>
@@ -235,7 +235,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'login' }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="w-full pl-12 pr-12 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                className="w-full pl-12 pr-12 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 placeholder="Enter your password"
               />
               <button
@@ -262,7 +262,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'login' }) => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                   placeholder="Confirm your password"
                 />
               </div>
