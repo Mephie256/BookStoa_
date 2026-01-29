@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ChevronLeft, ChevronRight, Star, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import BookCard from '../components/BookCard';
-import Sidebar from '../components/Sidebar';
-import MobileHeader from '../components/MobileHeader';
-import GoogleStyleSearch from '../components/GoogleStyleSearch';
 import LoaderOne from '../components/ui/loader-one';
 import { booksApi } from '../services/newApi';
 import { useAudio } from '../contexts/AudioContext';
@@ -12,7 +9,6 @@ import { Aurora } from '../components/ui/aurora';
 
 const Home = () => {
   const [books, setBooks] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -45,13 +41,10 @@ const Home = () => {
     loadBooks();
   }, []);
 
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBooks = books;
 
   return (
-    <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-gray-900 relative overflow-hidden">
       {/* Dark Aurora Background - Full Coverage */}
       <div className="fixed inset-0 w-full h-full opacity-50 z-0">
         <Aurora
@@ -66,46 +59,12 @@ const Home = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <Sidebar />
 
-      {/* Mobile Header */}
-      <MobileHeader
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        onSearch={(query) => {
-          console.log('🔍 Home mobile search:', query);
-          navigate(`/search?q=${encodeURIComponent(query)}`);
-        }}
-      />
 
-      <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
+      <main data-scroll-container className="h-[100dvh] overflow-y-auto overflow-x-hidden relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
 
-        {/* Desktop Header */}
-        <div className="hidden md:block sticky top-0 z-30 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50 px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-                <img
-                  src="https://i.ibb.co/5W2jJ7qT/Untitled-design-10.png"
-                  alt="Pneuma Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white mb-1">Discover Amazing Books</h1>
-                <p className="text-gray-300">Explore our curated collection of Christian literature</p>
-              </div>
-            </div>
 
-            <GoogleStyleSearch
-              placeholder="Search books, authors, genres..."
-              variant="header"
-              className="w-96"
-            />
-          </div>
-        </div>
-
-        <div className="px-4 md:px-8 py-6 space-y-12 relative z-20">
+        <div className="px-4 md:px-8 pt-24 md:pt-6 pb-6 space-y-12 relative z-20">
 
           {/* Loading State */}
           {isLoading && (
@@ -122,65 +81,69 @@ const Home = () => {
           {/* Main Content - Only show when not loading */}
           {!isLoading && (
             <>
-              {/* Hero Section with Aurora Background */}
-              <div className="relative overflow-hidden rounded-3xl p-8 text-white min-h-[400px]">
-            {/* Dark Aurora Background */}
-            <div className="absolute inset-0">
-              <Aurora
-                colorStops={["#0d8a2f", "#11b53f", "#16c946"]}
-                blend={0.7}
-                amplitude={1.2}
-                speed={0.25}
-                className="w-full h-full"
-              />
-            </div>
-            {/* Dark overlay for better text readability */}
-            <div className="absolute inset-0 bg-black/30"></div>
-            <div className="relative z-10 flex items-center justify-between h-full">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
-                    ✨ Featured Collection
-                  </span>
+              {/* Hero Section with Aurora Background - Updated Design */}
+              <div data-gsap="fade-up" className="relative overflow-hidden rounded-3xl p-8 md:p-16 text-white min-h-[500px] flex flex-col justify-center items-center text-center md:text-left md:items-start">
+                <style>{`
+                    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+                    .font-poppins { font-family: 'Poppins', sans-serif; }
+                `}</style>
+
+                {/* Dark Aurora Background */}
+                <div className="absolute inset-0">
+                  <Aurora
+                    colorStops={["#0d8a2f", "#11b53f", "#16c946"]}
+                    blend={0.7}
+                    amplitude={1.2}
+                    speed={0.25}
+                    className="w-full h-full"
+                  />
                 </div>
-                <h2 className="text-4xl font-bold mb-4">Discover Life-Changing Books</h2>
-                <p className="text-xl text-white/90 mb-6 max-w-2xl">
-                  Explore our curated collection of Christian literature that will inspire, challenge, and transform your faith journey.
-                </p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => navigate('/books')}
-                    className="px-6 py-3 bg-white text-gray-900 rounded-xl font-semibold hover:bg-white/90 transition-colors shadow-lg"
-                  >
-                    Browse Collection
-                  </button>
-                </div>
-              </div>
-              <div className="hidden lg:block">
-                <div className="grid grid-cols-2 gap-4">
-                  {filteredBooks.slice(0, 4).map((book, index) => (
-                    <div key={book.id} className="relative group">
-                      <img
-                        src={book.cover_file_url || book.coverUrl || book.cover_url || book.image_url || book.thumbnail || 'https://via.placeholder.com/96x128/11b53f/ffffff?text=📖'}
-                        alt={book.title}
-                        className="w-24 h-32 object-cover rounded-xl shadow-lg transform rotate-3 group-hover:rotate-0 transition-transform duration-300"
-                        style={{
-                          transform: `rotate(${index % 2 === 0 ? '3deg' : '-3deg'})`,
-                          zIndex: index
-                        }}
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/96x128/11b53f/ffffff?text=📖';
-                        }}
-                      />
+                {/* Dark overlay for better text readability */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+
+                <div className="relative z-10 w-full max-w-4xl mx-auto md:mx-0 font-poppins">
+                    {/* Social Proof */}
+                    <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+                        <div className="flex -space-x-3">
+                            <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200" alt="User"
+                                className="w-10 h-10 rounded-full border-2 border-green-900 hover:-translate-y-1 transition-transform z-10" />
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200" alt="User"
+                                className="w-10 h-10 rounded-full border-2 border-green-900 hover:-translate-y-1 transition-transform z-20" />
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&h=200&auto=format&fit=crop"
+                                alt="User"
+                                className="w-10 h-10 rounded-full border-2 border-green-900 hover:-translate-y-1 transition-transform z-30" />
+                        </div>
+                        <div className="flex flex-col items-center md:items-start">
+                            <div className="flex items-center gap-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <svg key={star} width="16" height="16" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.85536 0.463527C6.00504 0.00287118 6.65674 0.00287028 6.80642 0.463526L7.82681 3.60397C7.89375 3.80998 8.08572 3.94946 8.30234 3.94946H11.6044C12.0888 3.94946 12.2901 4.56926 11.8983 4.85397L9.22687 6.79486C9.05162 6.92219 8.97829 7.14787 9.04523 7.35388L10.0656 10.4943C10.2153 10.955 9.68806 11.338 9.2962 11.0533L6.62478 9.11244C6.44954 8.98512 6.21224 8.98512 6.037 9.11244L3.36558 11.0533C2.97372 11.338 2.44648 10.955 2.59616 10.4943L3.61655 7.35388C3.68349 7.14787 3.61016 6.92219 3.43491 6.79486L0.763497 4.85397C0.37164 4.56927 0.573027 3.94946 1.05739 3.94946H4.35944C4.57606 3.94946 4.76803 3.80998 4.83497 3.60397L5.85536 0.463527Z" fill="#FBBF24"/>
+                                    </svg>
+                                ))}
+                            </div>
+                            <p className="text-sm text-gray-200">Trusted by 12k+ Readers</p>
+                        </div>
                     </div>
-                  ))}
+
+                    <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-green-50 to-green-100 text-transparent bg-clip-text leading-tight drop-shadow-sm">
+                        Discover Life-Changing <br className="hidden md:block"/>Christian Literature
+                    </h1>
+                    
+                    <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl leading-relaxed opacity-90">
+                        Explore our curated collection of books that will inspire, challenge, and transform your faith journey today.
+                    </p>
+
+                    <button 
+                        onClick={() => navigate('/books')}
+                        className="px-10 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-full font-semibold text-lg transition-all shadow-[0_0_20px_rgba(22,201,70,0.2)] hover:shadow-[0_0_30px_rgba(22,201,70,0.4)] transform hover:-translate-y-1"
+                    >
+                        Browse Collection
+                    </button>
                 </div>
               </div>
-            </div>
-          </div>
 
           {/* Featured Book or Empty State */}
-          <div>
+          <div data-gsap="fade-up">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-white">Featured This Week</h2>
               <div className="flex gap-2">
@@ -215,7 +178,7 @@ const Home = () => {
           </div>
 
           {/* Popular Books */}
-          <div>
+          <div data-gsap="fade-up">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-white">Popular This Month</h2>
@@ -232,7 +195,7 @@ const Home = () => {
             </div>
 
             {/* Responsive grid: 2 columns mobile, 3 tablet, 4 desktop */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-stretch">
               {filteredBooks.length > 1 ? (
                 filteredBooks.slice(1, 6).map((book) => (
                   <BookCard key={book.id} book={book} />
@@ -246,7 +209,7 @@ const Home = () => {
           </div>
 
           {/* Recently Added */}
-          <div>
+          <div data-gsap="fade-up">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-white">Recently Added</h2>
@@ -262,7 +225,7 @@ const Home = () => {
             </div>
 
             {/* Show recent books - if we have enough, show slice, otherwise show all */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-stretch">
               {filteredBooks.length > 6 ? (
                 // If we have more than 6 books, show the last 5 (most recent)
                 filteredBooks.slice(-5).reverse().map((book) => (
@@ -285,7 +248,7 @@ const Home = () => {
           </div>
 
           {/* Categories */}
-          <div>
+          <div data-gsap="fade-up">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-white mb-2">Browse by Category</h2>
               <p className="text-gray-300">Discover books by your favorite genres</p>

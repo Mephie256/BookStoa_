@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Search, Download, Calendar, FileText, Trash2, Lock } from 'lucide-react';
+import { Download, Calendar, FileText, Trash2, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 import { Aurora } from '../components/ui/aurora';
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useAuth } from '../contexts/BetterAuthContext';
 import { useModal } from '../contexts/ModalContext';
 import { userDataService } from '../services/userDataService';
 import LoaderOne from '../components/ui/loader-one';
@@ -11,7 +10,6 @@ import AuthModal from '../components/AuthModal';
 
 const Downloads = () => {
   const [downloads, setDownloads] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -95,10 +93,7 @@ const Downloads = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [user]);
 
-  const filteredDownloads = downloads.filter(download =>
-    download.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    download.author?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredDownloads = downloads;
 
   const removeDownload = async (bookId) => {
     const confirmed = await showConfirm(
@@ -141,7 +136,6 @@ const Downloads = () => {
           />
         </div>
         <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
-        <Sidebar />
         <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
           <div className="flex items-center justify-center min-h-screen px-4">
             <div className="text-center max-w-md">
@@ -155,13 +149,13 @@ const Downloads = () => {
               <div className="space-y-3">
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="block w-full px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl hover:from-green-700 hover:to-green-600 transition-all duration-200 font-semibold shadow-lg"
+                  className="block w-full px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-md hover:from-green-700 hover:to-green-600 transition-all duration-200 font-semibold shadow-lg"
                 >
                   Sign In / Sign Up
                 </button>
                 <Link
                   to="/"
-                  className="block w-full px-6 py-3 bg-gray-800/50 backdrop-blur-sm text-white rounded-xl hover:bg-gray-700/50 transition-all duration-200 border border-gray-600/50"
+                  className="block w-full px-6 py-3 bg-gray-800/50 backdrop-blur-sm text-white rounded-md hover:bg-gray-700/50 transition-all duration-200 border border-gray-600/50"
                 >
                   Browse Books
                 </Link>
@@ -187,7 +181,6 @@ const Downloads = () => {
           />
         </div>
         <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
-        <Sidebar />
         <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
@@ -228,96 +221,27 @@ const Downloads = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <Sidebar />
-
       <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
-        {/* Header */}
-        <div className="sticky top-0 z-30 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50 px-4 md:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-                <img
-                  src="https://i.ibb.co/5W2jJ7qT/Untitled-design-10.png"
-                  alt="Pneuma Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white mb-1">My Downloads</h1>
-                <p className="text-gray-300">Manage your downloaded books</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 md:px-8 py-6 space-y-8 relative z-20">
-          {/* Search */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search your downloads..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-              />
-            </div>
-          </div>
+        <div className="px-4 md:px-8 pt-24 md:pt-6 pb-6 space-y-8 relative z-20">
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <Download className="w-8 h-8 text-green-400" />
-                <div>
-                  <p className="text-2xl font-bold text-white">{stats.total_downloads}</p>
-                  <p className="text-gray-400 text-sm">Total Downloads</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <FileText className="w-8 h-8 text-blue-400" />
-                <div>
-                  <p className="text-2xl font-bold text-white">{stats.unique_books}</p>
-                  <p className="text-gray-400 text-sm">Unique Books</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <Calendar className="w-8 h-8 text-purple-400" />
-                <div>
-                  <p className="text-2xl font-bold text-white">
-                    {downloads.length > 0
-                      ? formatDate(downloads[0].last_downloaded_at).split(',')[0]
-                      : 'N/A'
-                    }
-                  </p>
-                  <p className="text-gray-400 text-sm">Latest Download</p>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Downloads List */}
           {filteredDownloads.length > 0 ? (
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+            <div className="bg-gray-800/50 backdrop-blur-xl  p-6 shadow-2xl border border-gray-700/30">
               <h2 className="text-xl font-semibold text-white mb-6">
                 Download History ({filteredDownloads.length})
               </h2>
 
               <div className="space-y-4">
                 {filteredDownloads.map((download) => (
-                  <div key={download.id} className="bg-gray-700/30 backdrop-blur-sm rounded-xl p-4 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
+                  <div key={download.id} className="bg-gray-700/30 backdrop-blur-sm  p-4 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
                     <div className="flex items-center gap-4">
                       <img
                         src={download.cover_file_url}
                         alt={download.title}
-                        className="w-16 h-20 rounded-lg object-cover shadow-lg"
+                        className="w-16 h-20 rounded-md object-cover shadow-lg"
                         onError={(e) => {
                           e.target.src = 'https://via.placeholder.com/64x80/11b53f/ffffff?text=📖';
                         }}
@@ -335,7 +259,7 @@ const Downloads = () => {
                             <FileText className="w-3 h-3" />
                             <span>{download.download_count} time{download.download_count !== 1 ? 's' : ''}</span>
                           </div>
-                          <span className="px-2 py-1 bg-green-600/20 text-green-400 rounded-full">
+                          <span className="px-2 py-1 bg-green-600/20 text-green-400 rounded-md text-xs font-medium">
                             {download.genre}
                           </span>
                         </div>
@@ -344,14 +268,14 @@ const Downloads = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => redownload(download)}
-                          className="p-2 text-gray-400 hover:text-green-400 transition-colors rounded-lg hover:bg-gray-600/30"
+                          className="p-2 text-gray-400 hover:text-green-400 transition-colors rounded-md hover:bg-gray-600/30"
                           title="Re-download"
                         >
                           <Download className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => removeDownload(download.id)}
-                          className="p-2 text-gray-400 hover:text-red-400 transition-colors rounded-lg hover:bg-gray-600/30"
+                          className="p-2 text-gray-400 hover:text-red-400 transition-colors rounded-md hover:bg-gray-600/30"
                           title="Remove from downloads"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -364,7 +288,7 @@ const Downloads = () => {
             </div>
           ) : (
             <div className="text-center py-16">
-              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 shadow-2xl border border-gray-700/50 max-w-md mx-auto">
+              <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-12 shadow-2xl border border-gray-700/30 max-w-md mx-auto">
                 <Download className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">
                   {downloads.length === 0 ? 'No Downloads Yet' : 'No Downloads Found'}
@@ -372,13 +296,13 @@ const Downloads = () => {
                 <p className="text-gray-400 mb-6">
                   {downloads.length === 0
                     ? 'Start downloading books to read offline. Your downloads will appear here.'
-                    : 'Try adjusting your search to find your downloaded books.'
+                    : 'No downloads match your current view.'
                   }
                 </p>
                 {downloads.length === 0 && (
                   <button
                     onClick={() => window.location.href = '/'}
-                    className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
+                    className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-md font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
                   >
                     Browse Books
                   </button>

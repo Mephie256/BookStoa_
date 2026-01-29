@@ -114,6 +114,8 @@ const AuroraComponent = (props) => {
     amplitude: initialAmplitude = 1.0,
     blend: initialBlend = 0.5,
     speed: initialSpeed = 0.5,
+    fps: initialFps = 30,
+    dpr: initialDpr = 1.25,
   } = props;
 
   const propsRef = useRef(props);
@@ -125,11 +127,16 @@ const AuroraComponent = (props) => {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
       antialias: true,
-      dpr: Math.min(window.devicePixelRatio, 2), // Cap DPR for performance
+      dpr: Math.min(window.devicePixelRatio, initialDpr),
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -181,9 +188,37 @@ const AuroraComponent = (props) => {
     gl.canvas.style.top = '0';
     gl.canvas.style.left = '0';
 
+    let isVisible = true;
+    let isIntersecting = true;
+    const targetFps = prefersReducedMotion ? Math.min(initialFps, 12) : initialFps;
+    const frameInterval = targetFps > 0 ? 1000 / targetFps : 0;
+    let lastFrame = 0;
+    let lastStopsKey = (propsRef.current.colorStops || initialColorStops).join('|');
+
+    const onVisibilityChange = () => {
+      isVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    let observer;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        (entries) => {
+          isIntersecting = entries.some((e) => e.isIntersecting);
+        },
+        { root: null, threshold: 0 }
+      );
+      observer.observe(ctn);
+    }
+
     let animateId = 0;
     const update = (t) => {
       animateId = requestAnimationFrame(update);
+
+      if (!isVisible || !isIntersecting) return;
+      if (frameInterval > 0 && t - lastFrame < frameInterval) return;
+      lastFrame = t;
+
       const currentProps = propsRef.current;
       const { time, speed = initialSpeed } = currentProps;
 
@@ -193,14 +228,13 @@ const AuroraComponent = (props) => {
         program.uniforms.uBlend.value = currentProps.blend ?? initialBlend;
 
         const stops = currentProps.colorStops ?? initialColorStops;
-        if (program.uniforms.uColorStops.value.some((cs, i) => {
-            const newC = new Color(stops[i]);
-            return cs[0] !== newC.r || cs[1] !== newC.g || cs[2] !== newC.b;
-        })) {
-            program.uniforms.uColorStops.value = stops.map((hex) => {
-                const c = new Color(hex);
-                return [c.r, c.g, c.b];
-            });
+        const stopsKey = stops.join('|');
+        if (stopsKey !== lastStopsKey) {
+          lastStopsKey = stopsKey;
+          program.uniforms.uColorStops.value = stops.map((hex) => {
+            const c = new Color(hex);
+            return [c.r, c.g, c.b];
+          });
         }
         renderer.render({ scene: mesh });
       }
@@ -211,6 +245,10 @@ const AuroraComponent = (props) => {
 
     return () => {
       cancelAnimationFrame(animateId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (observer) {
+        observer.disconnect();
+      }
       window.removeEventListener("resize", resize, false);
       if (ctn && gl.canvas.parentNode === ctn) {
         ctn.removeChild(gl.canvas);
@@ -222,7 +260,7 @@ const AuroraComponent = (props) => {
       }
     };
     // Re-run effect if these fundamental props change to reinitialize WebGL
-  }, [initialColorStops, initialAmplitude, initialBlend, initialSpeed]);
+  }, [initialColorStops, initialAmplitude, initialBlend, initialSpeed, initialFps, initialDpr]);
 
   return <div ref={ctnDom} className={`relative overflow-hidden ${className}`} />;
 };

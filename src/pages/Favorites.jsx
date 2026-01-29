@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Search, Heart, Grid, List, Lock } from 'lucide-react';
+import { Heart, Grid, List, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 import BookCard from '../components/BookCard';
 import { Aurora } from '../components/ui/aurora';
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useAuth } from '../contexts/BetterAuthContext';
 import { useModal } from '../contexts/ModalContext';
 import { userDataService } from '../services/userDataService';
 import LoaderOne from '../components/ui/loader-one';
@@ -12,7 +11,6 @@ import AuthModal from '../components/AuthModal';
 
 const Favorites = () => {
   const [favoriteBooks, setFavoriteBooks] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(null);
@@ -69,11 +67,7 @@ const Favorites = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [user]);
 
-  // Filter favorites based on search
-  const filteredBooks = favoriteBooks.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBooks = favoriteBooks;
 
   // Remove favorite function
   const removeFavorite = (bookId) => {
@@ -109,7 +103,6 @@ const Favorites = () => {
           />
         </div>
         <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
-        <Sidebar />
         <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
           <div className="flex items-center justify-center min-h-screen px-4">
             <div className="text-center max-w-md">
@@ -155,7 +148,6 @@ const Favorites = () => {
           />
         </div>
         <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
-        <Sidebar />
         <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
@@ -186,112 +178,11 @@ const Favorites = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <Sidebar />
-
       <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
-        {/* Header */}
-        <div className="sticky top-0 z-30 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50 px-4 md:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-                <img
-                  src="https://i.ibb.co/5W2jJ7qT/Untitled-design-10.png"
-                  alt="Pneuma Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white mb-1">My Favorites</h1>
-                <p className="text-gray-300">Your most loved books collection</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {/* View Mode Toggle */}
-              <div className="flex bg-gray-800/50 rounded-xl p-1 border border-gray-700/50">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'grid'
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 md:px-8 py-6 space-y-8 relative z-20">
-          {/* Search */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search your favorites..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-              />
-            </div>
-          </div>
+        <div className="px-4 md:px-8 pt-24 md:pt-6 pb-6 space-y-8 relative z-20">
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <Heart className="w-8 h-8 text-red-400" />
-                <div>
-                  <p className="text-2xl font-bold text-white">{favoriteBooks.length}</p>
-                  <p className="text-gray-400 text-sm">Favorite Books</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                  <span className="text-blue-400 font-bold">📚</span>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-white">
-                    {new Set(favoriteBooks.map(book => book.genre)).size}
-                  </p>
-                  <p className="text-gray-400 text-sm">Genres</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-green-600/20 rounded-lg flex items-center justify-center">
-                  <span className="text-green-400 font-bold">⭐</span>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-white">
-                    {favoriteBooks.length > 0
-                      ? (favoriteBooks.reduce((sum, book) => sum + book.rating, 0) / favoriteBooks.length).toFixed(1)
-                      : '0.0'
-                    }
-                  </p>
-                  <p className="text-gray-400 text-sm">Avg Rating</p>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Books Display */}
           {filteredBooks.length > 0 ? (
@@ -301,24 +192,24 @@ const Favorites = () => {
               </h2>
               <div className={
                 viewMode === 'grid'
-                  ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center'
+                  ? 'grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-stretch'
                   : 'space-y-4'
               }>
                 {filteredBooks.map((favorite) => (
-                  <div key={favorite.book_id} className="relative group">
+                  <div key={favorite.book_id || favorite.id} className="relative group">
                     <BookCard
                       book={{
-                        id: favorite.book_id,
+                        id: favorite.book_id || favorite.id,
                         title: favorite.title,
                         author: favorite.author,
                         description: favorite.description,
                         genre: favorite.genre,
                         category: favorite.category,
-                        coverFileUrl: favorite.cover_file_url,
+                        cover_file_url: favorite.cover_file_url || favorite.coverUrl || favorite.coverFileUrl,
                         rating: favorite.rating,
                         totalRatings: favorite.total_ratings,
                         downloads: favorite.downloads,
-                        pdfFileUrl: favorite.pdf_file_url,
+                        pdf_file_url: favorite.pdf_file_url,
                         audioLink: favorite.audio_link,
                         pages: favorite.pages,
                         language: favorite.language,
@@ -328,7 +219,7 @@ const Favorites = () => {
                     />
                     {/* Remove from favorites button */}
                     <button
-                      onClick={() => removeFavorite(favorite.book_id)}
+                      onClick={() => removeFavorite(favorite.book_id || favorite.id)}
                       className="absolute top-2 right-2 w-8 h-8 bg-red-600/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-500 shadow-lg"
                     >
                       <Heart className="w-4 h-4 text-white fill-current" />
@@ -347,7 +238,7 @@ const Favorites = () => {
                 <p className="text-gray-400 mb-6">
                   {favoriteBooks.length === 0
                     ? 'Start adding books to your favorites by clicking the heart icon on any book.'
-                    : 'Try adjusting your search to find your favorite books.'
+                    : 'Try checking another book in your favorites.'
                   }
                 </p>
                 {favoriteBooks.length === 0 && (

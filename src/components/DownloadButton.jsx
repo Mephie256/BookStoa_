@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Download, Eye, FileText, AlertCircle, Lock } from 'lucide-react';
 import { downloadService } from '../services/downloadService';
-import { useAuth } from '../contexts/SimpleAuthContext';
-import { useModal } from '../contexts/ModalContext';
+import { useAuth } from '../contexts/BetterAuthContext';
+import { useToast } from '../contexts/ToastContext';
 import AuthModal from './AuthModal';
 
 const DownloadButton = ({ book, variant = 'default', showPreview = true }) => {
@@ -11,7 +11,7 @@ const DownloadButton = ({ book, variant = 'default', showPreview = true }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const { user } = useAuth();
-  const { showError, showSuccess } = useModal();
+  const toast = useToast();
   const isDownloadable = downloadService.isDownloadable(book);
   const isAuthenticated = !!user;
 
@@ -19,7 +19,7 @@ const DownloadButton = ({ book, variant = 'default', showPreview = true }) => {
 
   const handleDownload = async () => {
     if (!isAuthenticated) {
-      alert('Please sign in to download books');
+      toast.info('Please sign in to download books', 'Sign In Required', { duration: 3000 });
       return;
     }
 
@@ -41,17 +41,17 @@ const DownloadButton = ({ book, variant = 'default', showPreview = true }) => {
 
       if (result && result.success) {
         console.log('✅ Download successful:', result.message);
-        showSuccess('Download started successfully!', 'Download Complete');
+        toast.success(result.message || 'Download started successfully!', 'Download Complete', { duration: 3000 });
       } else if (result && !result.success) {
         console.error('❌ Download failed:', result.error);
-        showError(`Download failed: ${result.error}`, 'Download Failed');
+        toast.error(`Download failed: ${result.error}`, 'Download Failed', { duration: 5000 });
       } else {
         console.error('❌ Invalid download result:', result);
-        showError('Download failed. Please try again.', 'Download Failed');
+        toast.error('Download failed. Please try again.', 'Download Failed', { duration: 5000 });
       }
     } catch (error) {
       console.error('❌ Download exception:', error);
-      showError(`Download failed: ${error.message}`, 'Download Failed');
+      toast.error(`Download failed: ${error.message}`, 'Download Failed', { duration: 5000 });
     } finally {
       setIsDownloading(false);
     }

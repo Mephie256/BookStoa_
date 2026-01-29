@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -15,72 +14,117 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = async () => {
-      const currentUserId = localStorage.getItem('currentUserId');
-      if (currentUserId) {
-        try {
-          const userData = await authService.getUserById(currentUserId);
-          if (userData) {
-            setUser(userData);
-          } else {
-            localStorage.removeItem('currentUserId');
-          }
-        } catch (error) {
-          console.error('Error loading user data:', error);
-          localStorage.removeItem('currentUserId');
-        }
-      }
-      setLoading(false);
-    };
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-    checkAuth();
+  // Check session on mount
+  useEffect(() => {
+    checkSession();
   }, []);
 
+  const checkSession = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/auth/session`, {
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const session = await response.json();
+        if (session && session.user) {
+          setUser(session.user);
+        } else {
+          setUser(null);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check session:', error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Email/Password Login
   const login = async (email, password) => {
     try {
-      const result = await authService.login(email, password);
+      const response = await fetch(`${apiUrl}/auth/signin/credentials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (result.success) {
-        localStorage.setItem('currentUserId', result.user.id);
-        setUser(result.user);
+      if (response.ok) {
+        // After successful login, fetch the session
+        await checkSession();
         return { success: true };
       } else {
-        return { success: false, error: result.error };
+        const error = await response.json();
+        return { 
+          success: false, 
+          error: error.message || 'Invalid email or password' 
+        };
       }
     } catch (error) {
       console.error('Login error:', error);
-      return { success: false, error: 'Login failed' };
+      return { success: false, error: 'Login failed. Please try again.' };
     }
   };
 
+  // Email/Password Registration
   const register = async (userData) => {
     try {
-      const result = await authService.register(userData);
+      const registerUrl = 'http://localhost:3001/api/register';
+      
+      const response = await fetch(registerUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(userData),
+      });
 
-      if (result.success) {
-        localStorage.setItem('currentUserId', result.user.id);
-        setUser(result.user);
-        return { success: true };
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // After successful registration, automatically log in
+        return await login(userData.email, userData.password);
       } else {
-        return { success: false, error: result.error };
+        return { 
+          success: false, 
+          error: data.error || 'Registration failed' 
+        };
       }
     } catch (error) {
       console.error('Registration error:', error);
-      return { success: false, error: 'Registration failed' };
+      return { success: false, error: 'Could not connect to server. Make sure the backend is running.' };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('currentUserId');
-    setUser(null);
+  // Google Sign In
+  const loginWithGoogle = () => {
+    window.location.href = `${apiUrl}/auth/signin/google`;
+  };
+
+  // Logout
+  const logout = async () => {
+    try {
+      await fetch(`${apiUrl}/auth/signout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const isAdmin = () => {
     if (!user) return false;
     const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@pneumabookstore.com';
-    return user.role === 'admin' && user.email.toLowerCase() === adminEmail.toLowerCase();
+    return user.role === 'admin' || user.email?.toLowerCase() === adminEmail.toLowerCase();
   };
 
   const value = {
@@ -88,6 +132,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
+    loginWithGoogle,
     logout,
     isAdmin: isAdmin()
   };

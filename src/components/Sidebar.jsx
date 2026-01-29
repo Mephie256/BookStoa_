@@ -17,8 +17,9 @@ import {
 } from 'lucide-react';
 import MobileAudioPlayer from './MobileAudioPlayer';
 import AuthModal from './AuthModal';
+import UserAvatar from './UserAvatar';
 
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useAuth } from '../contexts/BetterAuthContext';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -54,29 +55,12 @@ const Sidebar = () => {
         <div className="w-full h-full bg-gradient-to-b from-green-900/20 via-transparent to-green-800/10"></div>
       </div>
 
-      {/* Header */}
-      <div className="relative z-10 p-6 border-b border-gray-700/50">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-            <img
-              src="https://i.ibb.co/5W2jJ7qT/Untitled-design-10.png"
-              alt="Pneuma Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">Pneuma</h1>
-            <p className="text-xs text-gray-400 font-medium">BookStore</p>
-          </div>
-        </div>
-
-        {/* User Profile */}
-        {user ? (
+      {/* User Profile Section - Only show if logged in */}
+      {user && (
+        <div className="relative z-10 p-6 border-b border-gray-700/50">
           <div className="flex items-center gap-3 p-3 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50">
             <div className="relative">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-green-500 to-green-600" style={{background: 'linear-gradient(135deg, #11b53f 0%, #0f9e37 100%)'}}>
-                <User className="w-6 h-6 text-white" />
-              </div>
+              <UserAvatar user={user} size="md" />
               {isAdmin && (
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
                   <Crown className="w-2.5 h-2.5 text-white" />
@@ -84,7 +68,7 @@ const Sidebar = () => {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-white">{user.name || user.email}</h3>
+              <h3 className="font-bold text-white truncate">{user.name || user.email}</h3>
               <div className="flex items-center gap-1">
                 <Sparkles className="w-3 h-3 text-green-400" />
                 <span className="text-xs font-semibold text-green-400">
@@ -100,21 +84,8 @@ const Sidebar = () => {
               <LogOut className="w-4 h-4" />
             </button>
           </div>
-        ) : (
-          <button
-            onClick={() => setShowAuthModal(true)}
-            className="flex items-center gap-3 p-3 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 hover:bg-gray-700/50 transition-colors w-full"
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-green-500 to-green-600" style={{background: 'linear-gradient(135deg, #11b53f 0%, #0f9e37 100%)'}}>
-              <LogIn className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex-1 min-w-0 text-left">
-              <h3 className="font-bold text-white">Sign In</h3>
-              <p className="text-xs text-gray-400">Access your library</p>
-            </div>
-          </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Navigation */}
       <nav className="relative z-10 flex-1 px-4 py-6">
@@ -177,7 +148,7 @@ const Sidebar = () => {
     <MobileAudioPlayer />
 
     {/* Mobile Bottom Navigation */}
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-xl border-t border-gray-700/50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-xl border-t border-gray-700/50 pb-[env(safe-area-inset-bottom,0px)]">
       <div className="flex items-center justify-around py-2">
         {mobileNavigationItems.map((item) => {
           const Icon = item.icon;

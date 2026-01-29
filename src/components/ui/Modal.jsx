@@ -113,7 +113,7 @@ const Modal = ({
       />
 
       {/* Modal */}
-      <div className={`relative bg-gray-800/95 backdrop-blur-xl rounded-2xl border ${colors.border} shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 ${
+      <div className={`relative bg-gray-800/95 backdrop-blur-xl rounded-md border ${colors.border} shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 ${
         isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
       }`}>
         
@@ -128,7 +128,7 @@ const Modal = ({
             </div>
             <button
               onClick={handleClose}
-              className="p-1 hover:bg-gray-700/50 rounded-lg transition-colors"
+              className="p-1 hover:bg-gray-700/50 rounded-md transition-colors"
             >
               <X className="w-5 h-5 text-gray-400 hover:text-white" />
             </button>
@@ -151,14 +151,14 @@ const Modal = ({
           {showCancel && (
             <button
               onClick={handleClose}
-              className="px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors font-medium"
+              className="px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-md transition-colors font-medium"
             >
               {cancelText}
             </button>
           )}
           <button
             onClick={handleConfirm}
-            className={`px-6 py-2 ${colors.button} text-white rounded-lg transition-colors font-medium shadow-lg`}
+            className={`px-6 py-2 ${colors.button} text-white rounded-md transition-colors font-medium shadow-lg`}
           >
             {confirmText}
           </button>

@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Grid, List, BookOpen, Lock } from 'lucide-react';
+import { Filter, Grid, List, BookOpen, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 import BookCard from '../components/BookCard';
 import DesktopAudioPlayer from '../components/DesktopAudioPlayer';
 import { Aurora } from '../components/ui/aurora';
 import { libraryApi } from '../services/newApi';
 import { userDataService } from '../services/userDataService';
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useAuth } from '../contexts/BetterAuthContext';
 import LoaderOne from '../components/ui/loader-one';
 import AuthModal from '../components/AuthModal';
 
 const Library = () => {
   const [books, setBooks] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
@@ -160,8 +158,7 @@ const Library = () => {
   }, [user]);
 
   const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = true;
     const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
     const matchesStatus = selectedStatus === 'all' || book.reading_status === selectedStatus;
     return matchesSearch && matchesGenre && matchesStatus;
@@ -205,7 +202,6 @@ const Library = () => {
           />
         </div>
         <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
-        <Sidebar />
         <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
           <div className="flex items-center justify-center min-h-screen px-4">
             <div className="text-center max-w-md">
@@ -253,154 +249,12 @@ const Library = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <Sidebar />
-
       <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
-        {/* Header */}
-        <div className="sticky top-0 z-30 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50 px-4 md:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-                <img
-                  src="https://i.ibb.co/5W2jJ7qT/Untitled-design-10.png"
-                  alt="Pneuma Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white mb-1">My Personal Library</h1>
-                <p className="text-gray-300">Your curated book collection - {stats.total_books} books</p>
-              </div>
-            </div>
+        <div className="px-4 md:px-8 pt-24 md:pt-6 pb-6 space-y-8 relative z-20">
 
-            <div className="flex items-center gap-4">
-              {/* View Mode Toggle */}
-              <div className="flex bg-gray-800/50 rounded-xl p-1 border border-gray-700/50">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'grid'
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 md:px-8 py-6 space-y-8 relative z-20">
-          {/* Library Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-gray-700/50">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-white">{stats.total_books}</p>
-                <p className="text-gray-400 text-sm">Total Books</p>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-gray-700/50">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-blue-400">{stats.currently_reading}</p>
-                <p className="text-gray-400 text-sm">Reading</p>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-gray-700/50">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-400">{stats.completed}</p>
-                <p className="text-gray-400 text-sm">Completed</p>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-gray-700/50">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-yellow-400">{stats.want_to_read}</p>
-                <p className="text-gray-400 text-sm">Want to Read</p>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-gray-700/50">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-orange-400">{stats.paused}</p>
-                <p className="text-gray-400 text-sm">Paused</p>
-              </div>
-            </div>
-          </div>
 
           {/* Filters */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              {/* Search */}
-              <div className="md:col-span-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search your library..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-                  />
-                </div>
-              </div>
 
-              {/* Reading Status Filter */}
-              <div>
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-                >
-                  {readingStatuses.map(status => (
-                    <option key={status.value} value={status.value} className="bg-gray-800">
-                      {status.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Genre Filter */}
-              <div>
-                <div className="relative">
-                  <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <select
-                    value={selectedGenre}
-                    onChange={(e) => setSelectedGenre(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-                  >
-                    {genres.map(genre => (
-                      <option key={genre} value={genre} className="bg-gray-800">
-                        {genre === 'all' ? 'All Genres' : genre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Sort */}
-              <div>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-                >
-                  <option value="title" className="bg-gray-800">Sort by Title</option>
-                  <option value="author" className="bg-gray-800">Sort by Author</option>
-                  <option value="rating" className="bg-gray-800">Sort by Rating</option>
-                  <option value="newest" className="bg-gray-800">Sort by Added Date</option>
-                </select>
-              </div>
-            </div>
-          </div>
 
           {/* Results Header */}
           <div className="flex justify-between items-center">
@@ -425,24 +279,24 @@ const Library = () => {
           {!loading && sortedBooks.length > 0 ? (
             <div className={
               viewMode === 'grid'
-                ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center'
+                ? 'grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-stretch'
                 : 'space-y-4'
             }>
               {sortedBooks.map((libraryBook) => (
                 <BookCard
-                  key={libraryBook.book_id}
+                  key={libraryBook.book_id || libraryBook.id}
                   book={{
-                    id: libraryBook.book_id,
+                    id: libraryBook.book_id || libraryBook.id,
                     title: libraryBook.title,
                     author: libraryBook.author,
                     description: libraryBook.description,
                     genre: libraryBook.genre,
                     category: libraryBook.category,
-                    coverFileUrl: libraryBook.cover_file_url,
+                    cover_file_url: libraryBook.cover_file_url || libraryBook.coverUrl || libraryBook.coverFileUrl || libraryBook.cover_url,
                     rating: libraryBook.rating,
                     totalRatings: libraryBook.total_ratings,
                     downloads: libraryBook.downloads,
-                    pdfFileUrl: libraryBook.pdf_file_url,
+                    pdf_file_url: libraryBook.pdf_file_url,
                     audioLink: libraryBook.audio_link,
                     pages: libraryBook.pages,
                     language: libraryBook.language,
@@ -463,12 +317,12 @@ const Library = () => {
                 <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">No Books Found</h3>
                 <p className="text-gray-400 mb-6">
-                  {searchTerm || selectedGenre !== 'all' || selectedStatus !== 'all'
-                    ? 'Try adjusting your search or filters'
+                  {selectedGenre !== 'all' || selectedStatus !== 'all'
+                    ? 'Try adjusting your filters'
                     : 'Your personal library is empty. Start adding books from the home page!'
                   }
                 </p>
-                {(!searchTerm && selectedGenre === 'all' && selectedStatus === 'all') && (
+                {(selectedGenre === 'all' && selectedStatus === 'all') && (
                   <button
                     onClick={() => window.location.href = '/'}
                     className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"

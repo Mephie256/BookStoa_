@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Heart, Lock } from 'lucide-react';
 import { userDataService } from '../services/userDataService';
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useAuth } from '../contexts/BetterAuthContext';
 import { useModal } from '../contexts/ModalContext';
 import AuthModal from './AuthModal';
 

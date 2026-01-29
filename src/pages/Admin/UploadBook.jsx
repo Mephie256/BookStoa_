@@ -5,7 +5,7 @@ import { Aurora } from '../../components/ui/aurora';
 import LoaderOne from '../../components/ui/loader-one';
 import { booksApi } from '../../services/newApi';
 import { uploadBookCover, uploadBookPDF } from '../../config/cloudinary';
-import { useAuth } from '../../contexts/SimpleAuthContext';
+import { useAuth } from '../../contexts/BetterAuthContext';
 import { useModal } from '../../contexts/ModalContext';
 
 const UploadBook = () => {
@@ -104,6 +104,10 @@ const UploadBook = () => {
     // Media Links
     audioLink: '',
     previewLink: '',
+
+    // Payment
+    isFree: true,
+    price: '',
 
     // Status
     featured: false,
@@ -246,6 +250,8 @@ const UploadBook = () => {
         cover_file_id: coverFileId,
         pdf_file_url: pdfFileUrl,
         pdf_file_id: pdfFileId,
+        is_free: formData.isFree,
+        price: formData.isFree ? 0 : parseInt(formData.price) || 0,
         featured: formData.featured,
         bestseller: formData.bestseller,
         new_release: formData.newRelease,
@@ -266,7 +272,8 @@ const UploadBook = () => {
           title: '', author: '', description: '', fullDescription: '',
           genre: '', category: '', tags: [], publisher: '', publishedDate: '',
           isbn: '', language: 'English', pages: '', rating: '', totalRatings: '',
-          audioLink: '', previewLink: '', featured: false, bestseller: false, newRelease: false
+          audioLink: '', previewLink: '', isFree: true, price: '',
+          featured: false, bestseller: false, newRelease: false
         });
         setFiles({ coverImage: null, pdfFile: null });
         setPreviews({ coverImage: null });
@@ -300,12 +307,13 @@ const UploadBook = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <div className="max-w-4xl mx-auto p-4 md:p-6 relative z-20">
+      <main className="min-h-screen relative z-20 md:ml-60 lg:ml-80 p-4 md:p-8 pb-32 md:pb-24">
+        <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center mb-8">
           <Link
             to="/admin"
-            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/50"
+            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/30"
             style={{color: '#11b53f'}}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -318,7 +326,7 @@ const UploadBook = () => {
         </div>
 
         {/* Upload Form */}
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-gray-700/50">
+        <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-8 shadow-2xl border border-gray-700/30">
           <form onSubmit={handleSubmit} className="space-y-8">
 
             {/* Basic Information Section */}
@@ -668,7 +676,7 @@ const UploadBook = () => {
                       name="audioLink"
                       value={formData.audioLink}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
                       placeholder="https://example.com/audiobook.mp3"
                     />
                   </div>
@@ -685,11 +693,54 @@ const UploadBook = () => {
                     name="previewLink"
                     value={formData.previewLink}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
                     placeholder="https://example.com/preview"
                   />
                   <p className="text-xs text-gray-400 mt-1">Link to book preview or sample</p>
                 </div>
+              </div>
+            </div>
+
+            {/* Payment Section */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold text-white border-b border-gray-700/50 pb-2">
+                Payment Information
+              </h3>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="isFree"
+                    name="isFree"
+                    checked={formData.isFree}
+                    onChange={handleInputChange}
+                    className="w-5 h-5 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
+                  />
+                  <label htmlFor="isFree" className="text-white font-medium">
+                    This book is free
+                  </label>
+                </div>
+
+                {!formData.isFree && (
+                  <div>
+                    <label htmlFor="price" className="block text-sm font-medium text-white mb-2">
+                      Price (UGX)
+                    </label>
+                    <input
+                      type="number"
+                      id="price"
+                      name="price"
+                      value={formData.price}
+                      onChange={handleInputChange}
+                      min="0"
+                      step="1000"
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                      placeholder="10000"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Enter price in Ugandan Shillings (UGX)</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -869,7 +920,8 @@ const UploadBook = () => {
             </div>
           </form>
         </div>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

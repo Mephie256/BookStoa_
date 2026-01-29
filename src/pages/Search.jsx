@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search as SearchIcon, Filter, Grid, List, X, Sparkles } from 'lucide-react';
-import Sidebar from '../components/Sidebar';
+import { Search as SearchIcon, Grid, List, X, Sparkles } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import LoaderOne from '../components/ui/loader-one';
-import GoogleStyleSearch from '../components/GoogleStyleSearch';
+import PageSearchBar from '../components/PageSearchBar';
 import { Aurora } from '../components/ui/aurora';
 import { booksApi } from '../services/newApi';
 
@@ -12,8 +11,6 @@ const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
-  const [selectedGenre, setSelectedGenre] = useState('all');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('relevance');
   const [isPlaying, setIsPlaying] = useState(false);
@@ -35,10 +32,7 @@ const Search = () => {
     try {
       console.log('🔍 Searching for:', query);
 
-      const response = await booksApi.search(query, {
-        genre: selectedGenre !== 'all' ? selectedGenre : undefined,
-        category: selectedCategory !== 'all' ? selectedCategory : undefined
-      });
+      const response = await booksApi.search(query);
 
       const searchResults = response.books || response || [];
       console.log('🔍 Search results:', searchResults);
@@ -65,13 +59,6 @@ const Search = () => {
     performSearch();
   };
 
-  // Handle filter changes
-  useEffect(() => {
-    if (hasSearched) {
-      performSearch();
-    }
-  }, [selectedGenre, selectedCategory]);
-
   // Initial search from URL params
   useEffect(() => {
     const query = searchParams.get('q');
@@ -81,14 +68,8 @@ const Search = () => {
     }
   }, []);
 
-  // Filter and sort results
-  const filteredBooks = books.filter(book => {
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
-    const matchesCategory = selectedCategory === 'all' || book.category === selectedCategory;
-    return matchesGenre && matchesCategory;
-  });
-
-  const sortedBooks = [...filteredBooks].sort((a, b) => {
+  // Sort results
+  const sortedBooks = [...books].sort((a, b) => {
     switch (sortBy) {
       case 'title':
         return a.title.localeCompare(b.title);
@@ -104,9 +85,6 @@ const Search = () => {
         return 0;
     }
   });
-
-  const genres = ['all', ...new Set(books.map(book => book.genre).filter(Boolean))];
-  const categories = ['all', ...new Set(books.map(book => book.category).filter(Boolean))];
 
   const clearSearch = () => {
     setSearchTerm('');
@@ -129,10 +107,8 @@ const Search = () => {
       </div>
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <Sidebar />
-
       <main className="min-h-screen overflow-auto relative z-20 md:ml-60 lg:ml-80 pb-32 md:pb-24">
-        <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+        <div className="max-w-7xl mx-auto p-4 pt-24 md:p-6 md:pt-6 space-y-6">
 
           {/* Header */}
           <div className="text-center mb-8">
@@ -143,67 +119,17 @@ const Search = () => {
             <p className="text-gray-300 text-lg">Discover your next great read with intelligent search</p>
           </div>
 
-          {/* Google-Style Search */}
-          <div className="mb-8">
-            <GoogleStyleSearch
-              placeholder="Search books, authors, genres..."
-              initialValue={searchTerm}
-              onSearch={(query) => {
-                setSearchTerm(query);
-                performSearch(query);
+          <div className="mb-8 w-full mx-auto">
+            <PageSearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              onSearch={(q) => {
+                setSearchTerm(q);
+                performSearch(q);
               }}
-              variant="desktop"
-              className="mb-6"
+              placeholder="Search books, authors, genres..."
+              buttonText="Search"
             />
-          </div>
-
-          {/* Advanced Filters */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50 mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <Filter className="w-5 h-5 text-green-400" />
-              <h3 className="text-lg font-semibold text-white">Advanced Filters</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Genre Filter */}
-              <select
-                value={selectedGenre}
-                onChange={(e) => setSelectedGenre(e.target.value)}
-                className="px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-              >
-                {genres.map(genre => (
-                  <option key={genre} value={genre} className="bg-gray-800">
-                    {genre === 'all' ? 'All Genres' : genre}
-                  </option>
-                ))}
-              </select>
-
-              {/* Category Filter */}
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category} className="bg-gray-800">
-                    {category === 'all' ? 'All Categories' : category}
-                  </option>
-                ))}
-              </select>
-
-              {/* Sort */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
-              >
-                <option value="relevance" className="bg-gray-800">Most Relevant</option>
-                <option value="title" className="bg-gray-800">Title A-Z</option>
-                <option value="author" className="bg-gray-800">Author A-Z</option>
-                <option value="rating" className="bg-gray-800">Highest Rated</option>
-                <option value="downloads" className="bg-gray-800">Most Downloaded</option>
-                <option value="newest" className="bg-gray-800">Newest First</option>
-              </select>
-            </div>
           </div>
 
           {/* Results */}
@@ -215,6 +141,18 @@ const Search = () => {
                 </h2>
 
                 <div className="flex items-center gap-2">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="hidden sm:block px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 backdrop-blur-sm transition-all duration-200"
+                  >
+                    <option value="relevance" className="bg-gray-800">Most Relevant</option>
+                    <option value="title" className="bg-gray-800">Title A-Z</option>
+                    <option value="author" className="bg-gray-800">Author A-Z</option>
+                    <option value="rating" className="bg-gray-800">Highest Rated</option>
+                    <option value="downloads" className="bg-gray-800">Most Downloaded</option>
+                    <option value="newest" className="bg-gray-800">Newest First</option>
+                  </select>
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded-lg transition-colors ${
@@ -246,7 +184,7 @@ const Search = () => {
               ) : sortedBooks.length > 0 ? (
                 <div className={`grid gap-6 ${
                   viewMode === 'grid'
-                    ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center'
+                    ? 'grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-stretch'
                     : 'grid-cols-1'
                 }`}>
                   {sortedBooks.map((book) => (
@@ -275,7 +213,7 @@ const Search = () => {
 
           {/* Search Tips */}
           {!hasSearched && (
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+            <div className="bg-gray-800/50 backdrop-blur-xl rounded-1xl p-6 shadow-2xl border border-gray-700/50">
               <h3 className="text-lg font-semibold text-white mb-4">Search Tips</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
                 <div>

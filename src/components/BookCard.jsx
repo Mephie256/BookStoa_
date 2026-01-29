@@ -1,388 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { Star, Download, Heart, Play, BookOpen, Headphones, Lock } from 'lucide-react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import DownloadButton from './DownloadButton';
-import FavoriteButton from './FavoriteButton';
-import { useAudio } from '../contexts/AudioContext';
-import { useAuth } from '../contexts/SimpleAuthContext';
-import AuthModal from './AuthModal';
+import { DollarSign } from 'lucide-react';
 
-const BookCard = ({ book, variant = 'default' }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const { playTrack } = useAudio();
-  const { user } = useAuth();
-  const isAuthenticated = !!user;
+const BookCard = ({ book }) => {
+    // Get cover image URL
+    const getCoverUrl = () => {
+        return book.cover_file_url ||
+               book.coverFileUrl ||
+               book.coverUrl ||
+               book.cover_url ||
+               book.image_url ||
+               book.thumbnail ||
+               'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop&crop=center';
+    };
 
-  const handleImageLoad = () => setImageLoaded(true);
-  const handleImageError = () => setImageError(true);
+    const coverUrl = getCoverUrl();
+    const rating = book.rating || 4;
+    const isFree = book.is_free !== false && book.isFree !== false; // Default to true if not specified
+    const price = book.price || 0;
 
-  // Get cover image URL from multiple possible field names
-  const getCoverUrl = () => {
-    return book.cover_file_url ||
-           book.coverUrl ||
-           book.cover_url ||
-           book.image_url ||
-           book.thumbnail ||
-           'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop&crop=center';
-  };
+    // Format price in UGX
+    const formatPrice = (amount) => {
+        return new Intl.NumberFormat('en-UG', {
+            style: 'currency',
+            currency: 'UGX',
+            minimumFractionDigits: 0,
+        }).format(amount);
+    };
 
-  const coverUrl = getCoverUrl();
-
-  // Handle play button click
-  const handlePlay = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!isAuthenticated) {
-      // Don't show alert, just do nothing - user will see the sign-in button instead
-      return;
-    }
-
-    if (book.audioLink || book.audio_link) {
-      const audioTrack = {
-        id: book.id,
-        title: book.title,
-        author: book.author,
-        cover_file_url: book.cover_file_url || book.coverUrl || book.cover_url,
-        audioLink: book.audioLink || book.audio_link,
-        audio_link: book.audioLink || book.audio_link
-      };
-
-      console.log('🎵 Playing audio:', audioTrack);
-      playTrack(audioTrack);
-    } else {
-      console.log('🎵 No audio available for this book');
-    }
-  };
-
-  // Use the same modern design for all screen sizes
-  // Removed mobile-specific card to maintain consistency
-
-  // New modern card design
-  if (variant === 'modern') {
     return (
-      <>
-        <style>
-          {`
-            .hover-scale {
-              transition: transform 700ms ease-out;
-            }
-
-            .hover-scale:hover {
-              transform: scale(1.02);
-            }
-
-            .image-scale {
-              transition: transform 700ms ease-out;
-            }
-
-            .image-container:hover .image-scale {
-              transform: scale(1.03);
-            }
-
-            .hover-translate {
-              transition: transform 500ms ease-out;
-            }
-
-            .hover-translate:hover {
-              transform: translateX(4px);
-            }
-
-            .hover-scale-sm {
-              transition: transform 500ms ease-out;
-            }
-
-            .hover-scale-sm:hover {
-              transform: scale(1.1);
-            }
-          `}
-        </style>
-
-        <Link to={`/book/${book.id}`} className="block w-full max-w-sm mx-auto">
-          <div className="bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl shadow-black/50 border border-gray-700/30 overflow-hidden hover-scale">
-            <div className="relative overflow-hidden image-container">
-              <img
-                src={coverUrl}
-                alt={book.title}
-                className="w-full aspect-[3/4] object-cover image-scale"
-                onLoad={handleImageLoad}
-                onError={handleImageError}
-              />
-              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent pointer-events-none"></div>
-
-              {/* Book Title Overlay */}
-              <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4">
-                <h3 className="text-base sm:text-lg font-semibold text-white drop-shadow-lg line-clamp-2">
-                  {book.title}
-                </h3>
-              </div>
-
-              {/* Rating Badge */}
-              <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
-                <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
-                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                  <span className="text-xs font-medium text-white">{book.rating || '4.5'}</span>
+        <div className="border border-gray-700/30 rounded-md md:px-4 px-3 py-2 bg-gray-800/50 backdrop-blur-xl w-full min-w-0 overflow-hidden sm:hover:border-green-500/50 transition-all duration-300 relative">
+            {/* Price Badge */}
+            {!isFree && (
+                <div className="absolute top-2 right-2 z-10 bg-green-600 text-white px-2 py-1 rounded-md text-xs font-semibold shadow-lg flex items-center gap-1">
+                    <DollarSign className="w-3 h-3" />
+                    {formatPrice(price)}
                 </div>
-              </div>
-
-              {/* Audio Play Button */}
-              {(book.audioLink || book.audio_link) && (
-                isAuthenticated ? (
-                  <button
-                    onClick={handlePlay}
-                    className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 bg-green-600/90 backdrop-blur-sm rounded-full flex items-center justify-center hover-scale-sm"
-                    title="Play Audio"
-                  >
-                    <Play className="w-4 h-4 sm:w-5 sm:h-5 text-white ml-0.5" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setShowAuthModal(true)}
-                    className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 bg-gray-600/90 backdrop-blur-sm rounded-full flex items-center justify-center hover-scale-sm"
-                    title="Sign in to listen"
-                  >
-                    <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                  </button>
-                )
-              )}
-            </div>
-
-            <div className="p-3 sm:p-4">
-              <div className="flex items-start justify-between mb-2 sm:mb-3">
-                <div className="flex-1 min-w-0 hover-translate">
-                  <p className="text-sm font-medium text-white truncate">
-                    {book.author}
-                  </p>
-                  <p className="text-xs text-gray-400 truncate">
-                    {book.genre || book.category}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-1 ml-2">
-                  <BookOpen className="w-3 h-3 text-gray-500" />
-                  <span className="text-xs text-gray-400">
-                    {book.pages || 'PDF'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-2" onClick={(e) => e.preventDefault()}>
-                <DownloadButton book={book} variant="compact" showPreview={false} />
-                <FavoriteButton book={book} variant="compact" showText={false} />
-              </div>
-            </div>
-          </div>
-        </Link>
-      </>
-    );
-  }
-
-  if (variant === 'featured') {
-    return (
-      <Link to={`/book/${book.id}`} className="block group">
-        <div className="book-card bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50 hover-lift">
-          <div className="flex gap-6">
-            <div className="relative flex-shrink-0">
-              <div className="w-24 h-36 bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl overflow-hidden shadow-md">
-                {!imageError ? (
-                  <img
-                    src={coverUrl}
-                    alt={book.title}
-                    className={`w-full h-full object-cover transition-opacity duration-300 ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onLoad={handleImageLoad}
-                    onError={handleImageError}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <BookOpen className="w-8 h-8 text-gray-500" />
-                  </div>
-                )}
-                {!imageLoaded && !imageError && (
-                  <div className="absolute inset-0 animate-pulse bg-gray-700 rounded-xl" />
-                )}
-              </div>
-              {book.audioLink && (
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-                  <Headphones className="w-4 h-4 text-white" />
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-bold text-white mb-2 line-clamp-2 group-hover:transition-colors"
-                  onMouseEnter={(e) => e.target.style.color = '#11b53f'}
-                  onMouseLeave={(e) => e.target.style.color = '#ffffff'}>
-                {book.title}
-              </h3>
-
-              <p className="text-gray-300 mb-3 font-medium">
-                by {book.author}
-              </p>
-
-              <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                {book.description}
-              </p>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(book.rating)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm font-semibold text-gray-200">{book.rating}</span>
-                  <span className="text-sm text-gray-400">({book.totalRatings})</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 text-xs font-medium rounded-full text-white" style={{backgroundColor: '#11b53f'}}>
-                    {book.genre}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-
-  // Default variant now uses modern design with responsive layout
-  return (
-    <>
-      <style>
-        {`
-          .hover-scale {
-            transition: transform 700ms ease-out;
-          }
-
-          .hover-scale:hover {
-            transform: scale(1.02);
-          }
-
-          .image-scale {
-            transition: transform 700ms ease-out;
-          }
-
-          .image-container:hover .image-scale {
-            transform: scale(1.03);
-          }
-
-          .hover-translate {
-            transition: transform 500ms ease-out;
-          }
-
-          .hover-translate:hover {
-            transform: translateX(4px);
-          }
-
-          .hover-scale-sm {
-            transition: transform 500ms ease-out;
-          }
-
-          .hover-scale-sm:hover {
-            transform: scale(1.1);
-          }
-        `}
-      </style>
-
-      <Link to={`/book/${book.id}`} className="block w-full max-w-sm mx-auto">
-        <div className="bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl shadow-black/50 border border-gray-700/30 overflow-hidden hover-scale">
-          <div className="relative overflow-hidden image-container">
-            <img
-              src={coverUrl}
-              alt={book.title}
-              className="w-full aspect-[3/4] object-cover image-scale"
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
-            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent pointer-events-none"></div>
-
-            {/* Book Title Overlay */}
-            <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4">
-              <h3 className="text-base sm:text-lg font-semibold text-white drop-shadow-lg line-clamp-2">
-                {book.title}
-              </h3>
-            </div>
-
-            {/* Rating Badge */}
-            <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
-              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
-                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs font-medium text-white">{book.rating || '4.5'}</span>
-              </div>
-            </div>
-
-            {/* Audio Play Button */}
-            {(book.audioLink || book.audio_link) && (
-              isAuthenticated ? (
-                <button
-                  onClick={handlePlay}
-                  className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 bg-green-600/90 backdrop-blur-sm rounded-full flex items-center justify-center hover-scale-sm"
-                  title="Play Audio"
-                >
-                  <Play className="w-4 h-4 sm:w-5 sm:h-5 text-white ml-0.5" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 bg-gray-600/90 backdrop-blur-sm rounded-full flex items-center justify-center hover-scale-sm"
-                  title="Sign in to listen"
-                >
-                  <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                </button>
-              )
             )}
-          </div>
-
-          <div className="p-3 sm:p-4">
-            <div className="flex items-start justify-between mb-2 sm:mb-3">
-              <div className="flex-1 min-w-0 hover-translate">
-                <p className="text-sm font-medium text-white truncate">
-                  {book.author}
-                </p>
-                <p className="text-xs text-gray-400 truncate">
-                  {book.genre || book.category}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-1 ml-2">
-                <BookOpen className="w-3 h-3 text-gray-500" />
-                <span className="text-xs text-gray-400">
-                  {book.pages || 'PDF'}
-                </span>
-              </div>
+            {isFree && (
+                <div className="absolute top-2 right-2 z-10 bg-gray-700/90 text-green-400 px-2 py-1 rounded-md text-xs font-semibold shadow-lg">
+                    FREE
+                </div>
+            )}
+            
+            <div className="group cursor-pointer flex items-center justify-center px-2">
+                <Link to={`/book/${book.id}`}>
+                    <img 
+                        className="w-full max-w-[120px] md:max-w-[144px] h-auto object-contain sm:group-hover:scale-105 transition" 
+                        src={coverUrl} 
+                        alt={book.title} 
+                    />
+                </Link>
             </div>
-
-            {/* Action Buttons - Only show if user is authenticated */}
-            <div className="space-y-2" onClick={(e) => e.preventDefault()}>
-              <DownloadButton book={book} variant="compact" showPreview={false} />
-              <FavoriteButton book={book} variant="compact" showText={false} />
+            <div className="text-gray-400 text-sm">
+                <p className="text-gray-500">{book.category || book.genre || 'General'}</p>
+                <p className="text-white font-medium text-lg truncate w-full">{book.title}</p>
+                <div className="flex items-center gap-0.5">
+                    {Array(5).fill('').map((_, i) => (
+                        rating > i ? (
+                            <svg key={i} width="14" height="13" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.049.927c.3-.921 1.603-.921 1.902 0l1.294 3.983a1 1 0 0 0 .951.69h4.188c.969 0 1.371 1.24.588 1.81l-3.388 2.46a1 1 0 0 0-.364 1.118l1.295 3.983c.299.921-.756 1.688-1.54 1.118L9.589 13.63a1 1 0 0 0-1.176 0l-3.389 2.46c-.783.57-1.838-.197-1.539-1.118L4.78 10.99a1 1 0 0 0-.363-1.118L1.028 7.41c-.783-.57-.38-1.81.588-1.81h4.188a1 1 0 0 0 .95-.69z" fill="#22c55e" />
+                            </svg>
+                        ) : (
+                            <svg key={i} width="14" height="13" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.04894 0.927049C8.3483 0.00573802 9.6517 0.00574017 9.95106 0.927051L11.2451 4.90983C11.379 5.32185 11.763 5.60081 12.1962 5.60081H16.3839C17.3527 5.60081 17.7554 6.84043 16.9717 7.40983L13.5838 9.87132C13.2333 10.126 13.0866 10.5773 13.2205 10.9894L14.5146 14.9721C14.8139 15.8934 13.7595 16.6596 12.9757 16.0902L9.58778 13.6287C9.2373 13.374 8.7627 13.374 8.41221 13.6287L5.02426 16.0902C4.24054 16.6596 3.18607 15.8934 3.48542 14.9721L4.7795 10.9894C4.91338 10.5773 4.76672 10.126 4.41623 9.87132L1.02827 7.40983C0.244561 6.84043 0.647338 5.60081 1.61606 5.60081H5.8038C6.23703 5.60081 6.62099 5.32185 6.75486 4.90983L8.04894 0.927049Z" fill="#22c55e" fillOpacity="0.35" />
+                            </svg>
+                        )
+                    ))}
+                    <p className="text-gray-400">({rating})</p>
+                </div>
+                <div className="mt-3">
+                    <Link
+                        to={`/book/${book.id}`}
+                        className="inline-flex items-center justify-center bg-green-600/20 border border-green-500/40 px-3 py-1.5 rounded text-green-400 font-medium hover:bg-green-600/30 transition-colors"
+                    >
+                        {isFree ? 'Read' : 'View'}
+                    </Link>
+                </div>
             </div>
-          </div>
         </div>
-      </Link>
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        defaultMode="login"
-      />
-    </>
-  );
+    );
 };
 
 export default BookCard;

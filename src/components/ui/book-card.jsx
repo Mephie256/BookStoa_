@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import DownloadButton from '../DownloadButton';
 import FavoriteButton from '../FavoriteButton';
 import { useAudio } from '../../contexts/AudioContext';
-import { useAuth } from '../../contexts/SimpleAuthContext';
+import { useAuth } from '../../contexts/BetterAuthContext';
 import AuthModal from '../AuthModal';
 
 export const BookCard = ({ book, variant = 'default' }) => {

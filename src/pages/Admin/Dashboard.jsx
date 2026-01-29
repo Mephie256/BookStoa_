@@ -12,7 +12,7 @@ import {
   Database
 } from 'lucide-react';
 import { Aurora } from '../../components/ui/aurora';
-import { useAuth } from '../../contexts/SimpleAuthContext';
+import { useAuth } from '../../contexts/BetterAuthContext';
 import { useModal } from '../../contexts/ModalContext';
 import { booksApi } from '../../services/newApi';
 import { authService } from '../../services/authService';
@@ -46,8 +46,9 @@ const AdminDashboard = () => {
         setBooks(booksData);
 
         // Load users (if available)
+        let usersData = [];
         try {
-          const usersData = await authService.getAllUsers();
+          usersData = await authService.getAllUsers();
           setUsers(usersData || []);
         } catch (error) {
           console.log('Users data not available:', error);
@@ -68,7 +69,7 @@ const AdminDashboard = () => {
 
         setStats({
           totalBooks: booksData.length,
-          totalUsers: users.length || 0,
+          totalUsers: usersData.length || 0,
           totalDownloads: totalDownloads,
           monthlyGrowth: monthlyGrowth
         });
@@ -187,7 +188,8 @@ const AdminDashboard = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <div className="max-w-7xl mx-auto p-4 md:p-6 relative z-20">
+      <main className="min-h-screen relative z-20 md:ml-60 lg:ml-80 p-4 md:p-8 pb-32 md:pb-24">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -198,15 +200,14 @@ const AdminDashboard = () => {
             <button
               onClick={handleSeedDatabase}
               disabled={isSeeding}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Database className="w-4 h-4" />
               {isSeeding ? 'Seeding...' : 'Seed Database'}
             </button>
             <Link
               to="/admin/upload"
-              className="flex items-center gap-2 text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-colors"
-              style={{backgroundColor: '#11b53f'}}
+              className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-2 rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
             >
               <Plus className="w-4 h-4" />
               Upload New Book
@@ -216,7 +217,7 @@ const AdminDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Total Books</p>
@@ -228,38 +229,38 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Total Users</p>
                 <p className="text-2xl font-bold text-white">{stats.totalUsers}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-400" />
+              <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-green-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Total Downloads</p>
                 <p className="text-2xl font-bold text-white">{stats.totalDownloads.toLocaleString()}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
-                <Download className="w-6 h-6 text-purple-400" />
+              <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                <Download className="w-6 h-6 text-green-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Monthly Growth</p>
                 <p className="text-2xl font-bold text-white">+{stats.monthlyGrowth}%</p>
               </div>
-              <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-orange-400" />
+              <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-green-400" />
               </div>
             </div>
           </div>
@@ -267,7 +268,7 @@ const AdminDashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Books Management */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-white">Recent Books</h2>
               <Link
@@ -335,7 +336,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Users Management */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-white">Recent Users</h2>
               <Link
@@ -385,7 +386,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
               to="/admin/upload"
-              className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50 hover:bg-gray-700/50 transition-all duration-200"
+              className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30 hover:bg-gray-700/50 transition-all duration-200"
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
@@ -400,11 +401,11 @@ const AdminDashboard = () => {
 
             <Link
               to="/admin/books"
-              className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50 hover:bg-gray-700/50 transition-all duration-200"
+              className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30 hover:bg-gray-700/50 transition-all duration-200"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-blue-400" />
+                <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
                   <h3 className="font-medium text-white">Manage Books</h3>
@@ -415,11 +416,11 @@ const AdminDashboard = () => {
 
             <Link
               to="/admin/users"
-              className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50 hover:bg-gray-700/50 transition-all duration-200"
+              className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30 hover:bg-gray-700/50 transition-all duration-200"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
-                  <Users className="w-6 h-6 text-purple-400" />
+                <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
                   <h3 className="font-medium text-white">Manage Users</h3>
@@ -429,7 +430,8 @@ const AdminDashboard = () => {
             </Link>
           </div>
         </div>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

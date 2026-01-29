@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Eye, Search, Filter, User, Mail, Calendar, Download, Shield } from 'lucide-react';
 import { Aurora } from '../../components/ui/aurora';
 import { authService } from '../../services/authService';
-import { useAuth } from '../../contexts/SimpleAuthContext';
+import { useAuth } from '../../contexts/BetterAuthContext';
 import LoaderOne from '../../components/ui/loader-one';
+import UserAvatar from '../../components/UserAvatar';
 
 const UsersManagement = () => {
   const [users, setUsers] = useState([]);
@@ -93,12 +94,13 @@ const UsersManagement = () => {
       {/* Dark overlay for better readability */}
       <div className="fixed inset-0 w-full h-full bg-gray-900/30 z-0"></div>
 
-      <div className="max-w-7xl mx-auto p-4 md:p-6 relative z-20">
+      <main className="min-h-screen relative z-20 md:ml-60 lg:ml-80 p-4 md:p-8 pb-32 md:pb-24">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center mb-8">
           <Link
             to="/admin"
-            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/50"
+            className="flex items-center gap-2 transition-colors mr-4 hover:opacity-80 bg-gray-800/30 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/30"
             style={{color: '#11b53f'}}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -111,7 +113,7 @@ const UsersManagement = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50 mb-8">
+        <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30 mb-8">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
@@ -143,7 +145,7 @@ const UsersManagement = () => {
         </div>
 
         {/* Users List */}
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+        <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-white">
               All Users ({loading ? '...' : filteredUsers.length})
@@ -171,9 +173,7 @@ const UsersManagement = () => {
               <div key={user.id} className="bg-gray-700/30 backdrop-blur-sm rounded-xl p-6 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gray-600/50 rounded-xl flex items-center justify-center">
-                      <User className="w-6 h-6 text-gray-300" />
-                    </div>
+                    <UserAvatar user={user} size="md" />
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium text-white">{user.name || user.email.split('@')[0]}</h3>
@@ -230,26 +230,27 @@ const UsersManagement = () => {
 
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <h3 className="text-lg font-semibold text-white mb-2">Total Users</h3>
             <p className="text-3xl font-bold text-green-400">{users.length}</p>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <h3 className="text-lg font-semibold text-white mb-2">Active Users</h3>
             <p className="text-3xl font-bold text-blue-400">
               {users.filter(user => user.is_active).length}
             </p>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-gray-700/50">
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-md p-6 shadow-2xl border border-gray-700/30">
             <h3 className="text-lg font-semibold text-white mb-2">Admin Users</h3>
             <p className="text-3xl font-bold text-purple-400">
               {users.filter(user => user.role === 'admin').length}
             </p>
           </div>
         </div>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
