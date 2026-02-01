@@ -25,8 +25,17 @@ export function getAuth() {
   }
 
   // Get other config
-  const BETTER_AUTH_URL = process.env.VITE_BETTER_AUTH_URL || import.meta.env?.VITE_BETTER_AUTH_URL || "http://localhost:5173";
-  const BETTER_AUTH_SECRET = process.env.VITE_BETTER_AUTH_SECRET || import.meta.env?.VITE_BETTER_AUTH_SECRET;
+  const BETTER_AUTH_URL =
+    process.env.BETTER_AUTH_URL ||
+    process.env.VITE_BETTER_AUTH_URL ||
+    import.meta.env?.VITE_BETTER_AUTH_URL ||
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    "http://localhost:5173";
+  const BETTER_AUTH_SECRET =
+    process.env.BETTER_AUTH_SECRET ||
+    process.env.VITE_BETTER_AUTH_SECRET ||
+    import.meta.env?.VITE_BETTER_AUTH_SECRET;
 
   // Create database connection for auth
   const sql = neon(DATABASE_URL);
@@ -118,7 +127,10 @@ export function getAuth() {
       "http://localhost:5175",
       "http://localhost:5176",
       "http://localhost:3000",
-    ],
+      BETTER_AUTH_URL,
+      process.env.URL,
+      process.env.DEPLOY_PRIME_URL,
+    ].filter(Boolean),
     // Explicitly set these from resolved variables to verify they are present
     baseURL: BETTER_AUTH_URL,
     secret: BETTER_AUTH_SECRET,

@@ -13,7 +13,8 @@ import {
   Sparkles,
   LogIn,
   LogOut,
-  Book
+  Book,
+  ExternalLink
 } from 'lucide-react';
 import MobileAudioPlayer from './MobileAudioPlayer';
 import AuthModal from './AuthModal';
@@ -123,23 +124,56 @@ const Sidebar = () => {
             );
           })}
         </div>
-
-        {/* Admin Section */}
-        {isAdmin && (
-          <div className="mt-8 pt-6 border-t border-gray-700/50">
-            <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Admin
-            </p>
-            <Link
-              to="/admin"
-              className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800/50 hover:text-white transition-all duration-200 backdrop-blur-sm"
-            >
-              <Settings className="w-5 h-5 text-gray-400 transition-transform group-hover:scale-110 group-hover:rotate-90" />
-              <span className="font-medium">Dashboard</span>
-            </Link>
-          </div>
-        )}
       </nav>
+
+      {/* Resources Section - Push to bottom */}
+      <div className="px-4 pb-6 mt-auto space-y-2">
+        <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          Resources
+        </p>
+        
+        <a 
+          href="https://freedomexperienceministry.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800/50 hover:text-white transition-all duration-200 backdrop-blur-sm"
+        >
+          <div className="w-5 h-5 flex items-center justify-center">
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-green-400 transition-colors"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M17 21v-5.5a2.5 2.5 0 0 0-5 0V21"/><path d="M12 3a2.5 2.5 0 0 0 2.5 2.5"/></svg>
+          </div>
+          <span className="font-medium">Church</span>
+          <ExternalLink className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity" />
+        </a>
+
+        <a 
+          href="https://christfaculty.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800/50 hover:text-white transition-all duration-200 backdrop-blur-sm"
+        >
+          <div className="w-5 h-5 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-green-400 transition-colors"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          <span className="font-medium">Bible School</span>
+          <ExternalLink className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity" />
+        </a>
+      </div>
+
+      {/* Admin Section */}
+      {isAdmin && (
+        <div className="px-4 pb-6 border-t border-gray-700/50 pt-4">
+          <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            Admin
+          </p>
+          <Link
+            to="/admin"
+            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800/50 hover:text-white transition-all duration-200 backdrop-blur-sm"
+          >
+            <Settings className="w-5 h-5 text-gray-400 transition-transform group-hover:scale-110 group-hover:rotate-90" />
+            <span className="font-medium">Dashboard</span>
+          </Link>
+        </div>
+      )}
 
 
     </aside>

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/BetterAuthContext';
 import AuthModal from './AuthModal';
 import UserAvatar from './UserAvatar';
-import { LogIn, User, LogOut, Crown } from 'lucide-react';
+import { LogIn, User, LogOut, Crown, ExternalLink } from 'lucide-react';
 
 const MobileHeader = () => {
     const [open, setOpen] = useState(false);
@@ -179,6 +179,37 @@ const MobileHeader = () => {
                             <span>Sign In</span>
                         </button>
                     )}
+
+                    {/* Resources Links */}
+                    <div className="w-full pt-4 mt-2 border-t border-gray-700/50 flex flex-col gap-2">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1 px-1">
+                            Resources
+                        </p>
+                        <a 
+                            href="https://freedomexperienceministry.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-3 rounded-xl bg-gray-800/30 text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M17 21v-5.5a2.5 2.5 0 0 0-5 0V21"/><path d="M12 3a2.5 2.5 0 0 0 2.5 2.5"/></svg>
+                                Church Website
+                            </span>
+                            <ExternalLink className="w-3 h-3 text-gray-500" />
+                        </a>
+                        <a 
+                            href="https://christfaculty.org"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-3 rounded-xl bg-gray-800/30 text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+                        >
+                            <span className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                                Bible School
+                            </span>
+                            <ExternalLink className="w-3 h-3 text-gray-500" />
+                        </a>
+                    </div>
                 </div>
             </nav>
 

@@ -40,11 +40,13 @@ async function runMigration() {
       CREATE TABLE IF NOT EXISTS "session" (
         "id" text PRIMARY KEY NOT NULL,
         "expiresAt" timestamp NOT NULL,
+        "token" text NOT NULL,
         "ipAddress" text,
         "userAgent" text,
         "userId" text NOT NULL,
         "createdAt" timestamp DEFAULT now() NOT NULL,
         "updatedAt" timestamp DEFAULT now() NOT NULL,
+        CONSTRAINT "session_token_unique" UNIQUE("token"),
         CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE cascade
       )
     `);
@@ -81,18 +83,22 @@ async function runMigration() {
 
     console.log('Step 6: Updating foreign keys in favorites table...');
     await db.execute(sqlOp`ALTER TABLE "favorites" DROP CONSTRAINT IF EXISTS "favorites_user_id_users_id_fk"`);
+    await db.execute(sqlOp`ALTER TABLE "favorites" DROP CONSTRAINT IF EXISTS "favorites_user_id_user_id_fk"`);
     await db.execute(sqlOp`ALTER TABLE "favorites" ADD CONSTRAINT "favorites_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE cascade`);
 
     console.log('Step 7: Updating foreign keys in downloads table...');
     await db.execute(sqlOp`ALTER TABLE "downloads" DROP CONSTRAINT IF EXISTS "downloads_user_id_users_id_fk"`);
+    await db.execute(sqlOp`ALTER TABLE "downloads" DROP CONSTRAINT IF EXISTS "downloads_user_id_user_id_fk"`);
     await db.execute(sqlOp`ALTER TABLE "downloads" ADD CONSTRAINT "downloads_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE cascade`);
 
     console.log('Step 8: Updating foreign keys in book_ratings table...');
     await db.execute(sqlOp`ALTER TABLE "book_ratings" DROP CONSTRAINT IF EXISTS "book_ratings_user_id_users_id_fk"`);
+    await db.execute(sqlOp`ALTER TABLE "book_ratings" DROP CONSTRAINT IF EXISTS "book_ratings_user_id_user_id_fk"`);
     await db.execute(sqlOp`ALTER TABLE "book_ratings" ADD CONSTRAINT "book_ratings_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE cascade`);
 
     console.log('Step 9: Updating foreign keys in reading_progress table...');
     await db.execute(sqlOp`ALTER TABLE "reading_progress" DROP CONSTRAINT IF EXISTS "reading_progress_user_id_users_id_fk"`);
+    await db.execute(sqlOp`ALTER TABLE "reading_progress" DROP CONSTRAINT IF EXISTS "reading_progress_user_id_user_id_fk"`);
     await db.execute(sqlOp`ALTER TABLE "reading_progress" ADD CONSTRAINT "reading_progress_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE cascade`);
 
     console.log('\n✅ Migration completed successfully!');
