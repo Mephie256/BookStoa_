@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Heart, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import { CiBookmark } from 'react-icons/ci';
 import { userDataService } from '../services/userDataService';
 import { useAuth } from '../contexts/BetterAuthContext';
 import { useModal } from '../contexts/ModalContext';
@@ -76,8 +77,8 @@ const FavoriteButton = ({ book, variant = 'default', showText = true }) => {
         } ${isAnimating ? 'scale-110' : ''}`}
         title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       >
-        <Heart
-          className={`w-3 h-3 transition-all duration-200 ${
+        <CiBookmark
+          className={`w-4 h-4 transition-all duration-200 ${
             isFavorite ? 'fill-current' : ''
           } ${isAnimating ? 'animate-pulse' : ''}`}
         />
@@ -106,8 +107,8 @@ const FavoriteButton = ({ book, variant = 'default', showText = true }) => {
         } ${isAnimating ? 'scale-110' : ''}`}
         title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       >
-        <Heart
-          className={`w-5 h-5 transition-all duration-200 ${
+        <CiBookmark
+          className={`w-6 h-6 transition-all duration-200 ${
             isFavorite ? 'fill-current' : ''
           } ${isAnimating ? 'animate-pulse' : ''}`}
         />
@@ -147,7 +148,7 @@ const FavoriteButton = ({ book, variant = 'default', showText = true }) => {
             : 'bg-gradient-to-r from-gray-700 to-gray-600 text-white hover:from-gray-600 hover:to-gray-500'
         } ${isAnimating ? 'scale-105' : ''}`}
       >
-        <Heart
+        <CiBookmark
           className={`w-5 h-5 transition-all duration-200 ${
             isFavorite ? 'fill-current' : ''
           } ${isAnimating ? 'animate-pulse' : ''}`}
@@ -188,8 +189,8 @@ const FavoriteButton = ({ book, variant = 'default', showText = true }) => {
           : 'bg-gray-600 text-gray-300 hover:bg-gray-500 hover:text-white'
       } ${isAnimating ? 'scale-105' : ''}`}
     >
-      <Heart
-        className={`w-4 h-4 transition-all duration-200 ${
+      <CiBookmark
+        className={`w-5 h-5 transition-all duration-200 ${
           isFavorite ? 'fill-current' : ''
         } ${isAnimating ? 'animate-pulse' : ''}`}
       />

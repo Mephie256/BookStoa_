@@ -7,6 +7,7 @@ import { uploadService } from './uploadService.js';
 import { favoritesService } from './favoritesService.js';
 import { downloadsService } from './downloadsService.js';
 import { libraryService } from './libraryService.js';
+import { paymentsService } from './paymentsService.js';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 const USE_DEMO_DATA = false; // ALWAYS use real database - NO MORE DEMO SHIT
@@ -324,4 +325,29 @@ export const analyticsApi = {
   getUserActivity: () => apiRequest('/analytics/users'),
   getBookPerformance: () => apiRequest('/analytics/books'),
   getDownloadTrends: () => apiRequest('/analytics/downloads'),
+};
+
+// Payments API - REAL DATABASE ONLY
+export const paymentsApi = {
+  create: (paymentData) => {
+    return paymentsService.createPayment(paymentData);
+  },
+  updateStatus: (orderId, statusData) => {
+    return paymentsService.updatePaymentStatus(orderId, statusData);
+  },
+  getByOrderId: (orderId) => {
+    return paymentsService.getPaymentByOrderId(orderId);
+  },
+  getUserPayments: (userId) => {
+    if (!userId) return Promise.resolve({ success: true, payments: [] });
+    return paymentsService.getUserPayments(userId);
+  },
+  hasUserPaidForBook: (userId, bookId) => {
+    if (!userId || !bookId) return Promise.resolve({ success: true, hasPaid: false });
+    return paymentsService.hasUserPaidForBook(userId, bookId);
+  },
+  getBookPayments: (bookId) => {
+    if (!bookId) return Promise.resolve({ success: true, payments: [] });
+    return paymentsService.getBookPayments(bookId);
+  },
 };

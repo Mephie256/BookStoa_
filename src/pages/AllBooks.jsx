@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { BookOpen } from 'lucide-react';
+import { FaBook } from 'react-icons/fa';
 import BookCard from '../components/BookCard';
 import PageSearchBar from '../components/PageSearchBar';
 import LoaderOne from '../components/ui/loader-one';
 import { Aurora } from '../components/ui/aurora';
 import { booksApi } from '../services/newApi';
+import Seo from '../components/Seo';
 
 const AllBooks = () => {
   const [books, setBooks] = useState([]);
@@ -53,6 +54,11 @@ const AllBooks = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+      <Seo
+        title="All Books | Pneuma BookStore"
+        description="Explore the full Pneuma BookStore catalog of Christian literature. Browse all books and find your next inspiring read."
+        canonicalPath="/books"
+      />
       {/* Aurora Background */}
       <div className="fixed inset-0 w-full h-full opacity-50 z-0">
         <Aurora
@@ -71,7 +77,7 @@ const AllBooks = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <BookOpen className="w-8 h-8 text-green-400" />
+              <FaBook className="w-8 h-8 text-green-400" />
               <h1 className="text-4xl font-bold text-white">All Books</h1>
             </div>
             <p className="text-gray-300 text-lg">Explore our complete collection of Christian literature</p>
@@ -109,7 +115,7 @@ const AllBooks = () => {
             </div>
           ) : (
             <div className="text-center py-16">
-              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <FaBook className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">No books found</h3>
               <p className="text-gray-400 mb-6">
                 {searchTerm

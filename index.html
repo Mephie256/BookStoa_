@@ -2,13 +2,107 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icon.png" />
+    <link rel="icon" type="image/png" href="public/favicon.png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+    <link rel="shortcut icon" type="image/png" href="/public/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="theme-color" content="#111827" />
+    <meta name="theme-color" content="#11b53f" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>Pneuma BookStore</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Pneuma BookStore | Christian Books & Audiobooks Online" />
+    <meta name="description" content="Discover life-changing Christian books and audiobooks at Pneuma BookStore. Browse, read, and listen to inspiring titles for spiritual growth. Free and premium Christian literature available." />
+    <meta name="keywords" content="Christian books, Christian audiobooks, spiritual growth, Christian literature, faith books, devotional books, theology books, Christian reading, Pneuma BookStore, online Christian library" />
+    <meta name="author" content="Pneuma BookStore" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <link rel="canonical" href="https://books.christfaculty.org/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="Pneuma BookStore" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pneuma BookStore | Christian Books & Audiobooks Online" />
+    <meta property="og:description" content="Discover life-changing Christian books and audiobooks at Pneuma BookStore. Browse, read, and listen to inspiring titles for spiritual growth. Free and premium Christian literature available." />
+    <meta property="og:url" content="https://books.christfaculty.org/" />
+    <meta property="og:image" content="https://books.christfaculty.org/icon.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pneuma BookStore | Christian Books & Audiobooks Online" />
+    <meta name="twitter:description" content="Discover life-changing Christian books and audiobooks at Pneuma BookStore. Browse, read, and listen to inspiring titles for spiritual growth." />
+    <meta name="twitter:image" content="https://books.christfaculty.org/icon.png" />
+    <meta name="twitter:site" content="@PneumaBookStore" />
+    <meta name="twitter:creator" content="@PneumaBookStore" />
+
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "Pneuma BookStore",
+            "alternateName": "Pneuma Christian Books",
+            "url": "https://books.christfaculty.org/",
+            "logo": "https://books.christfaculty.org/icon.png",
+            "description": "Online Christian bookstore offering books and audiobooks for spiritual growth",
+            "sameAs": [
+              "https://christfaculty.org",
+              "https://freedomexperienceministry.org/"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "Customer Service",
+              "availableLanguage": ["English"]
+            }
+          },
+          {
+            "@type": "WebSite",
+            "name": "Pneuma BookStore",
+            "url": "https://books.christfaculty.org/",
+            "description": "Discover life-changing Christian books and audiobooks for spiritual growth",
+            "publisher": {
+              "@type": "Organization",
+              "name": "Pneuma BookStore"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://books.christfaculty.org/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://books.christfaculty.org/#webpage",
+            "url": "https://books.christfaculty.org/",
+            "name": "Pneuma BookStore | Christian Books & Audiobooks Online",
+            "description": "Discover life-changing Christian books and audiobooks at Pneuma BookStore",
+            "isPartOf": {
+              "@id": "https://books.christfaculty.org/#website"
+            },
+            "about": {
+              "@type": "Thing",
+              "name": "Christian Literature"
+            },
+            "inLanguage": "en-US"
+          }
+        ]
+      }
+    </script>
+    
+    <!-- Preconnect to External Domains for Performance -->
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    
+    <title>Pneuma BookStore | Christian Books & Audiobooks Online</title>
   </head>
   <body>
     <div id="root"></div>

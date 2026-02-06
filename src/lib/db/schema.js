@@ -140,3 +140,22 @@ export const readingProgress = pgTable('reading_progress', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+// Payment transactions table
+export const payments = pgTable('payments', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }).notNull(),
+  bookId: text('book_id').references(() => books.id, { onDelete: 'cascade' }).notNull(),
+  orderId: text('order_id').unique().notNull(),
+  orderTrackingId: text('order_tracking_id').unique(),
+  merchantReference: text('merchant_reference'),
+  amount: integer('amount').notNull(), // Amount in UGX
+  currency: text('currency').default('UGX').notNull(),
+  status: text('status').default('pending').notNull(), // pending, completed, failed, cancelled
+  paymentMethod: text('payment_method'),
+  confirmationCode: text('confirmation_code'),
+  paymentStatusDescription: text('payment_status_description'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  completedAt: timestamp('completed_at'),
+});

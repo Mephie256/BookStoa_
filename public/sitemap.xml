@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://books.christfaculty.org/</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- All Books Page -->
+  <url>
+    <loc>https://books.christfaculty.org/books</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Search Page -->
+  <url>
+    <loc>https://books.christfaculty.org/search</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Library Page -->
+  <url>
+    <loc>https://books.christfaculty.org/library</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- Favorites Page -->
+  <url>
+    <loc>https://books.christfaculty.org/favorites</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- Downloads Page -->
+  <url>
+    <loc>https://books.christfaculty.org/downloads</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- Book: book_1770377699510_ek5iff74o -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770377699510_ek5iff74o</loc>
+    <lastmod>2026-02-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770283931493_ll74nvavn -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770283931493_ll74nvavn</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770284386518_brfc8cib4 -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770284386518_brfc8cib4</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770284782526_6xka2i4lc -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770284782526_6xka2i4lc</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770285580053_52vqhw1bt -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770285580053_52vqhw1bt</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770286006219_e8blhk1kc -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770286006219_e8blhk1kc</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770295483539_1qgvw0wci -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770295483539_1qgvw0wci</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770296262784_7sffe2vaz -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770296262784_7sffe2vaz</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770296964159_9h1j88j97 -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770296964159_9h1j88j97</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770301184167_tcn97qqlu -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770301184167_tcn97qqlu</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770283046971_5b3sr6h7i -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770283046971_5b3sr6h7i</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770302709582_5sw1kfind -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770302709582_5sw1kfind</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770302076901_mkiz2iwrq -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770302076901_mkiz2iwrq</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770298580638_hgv48jdl2 -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770298580638_hgv48jdl2</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770297475289_u9f4qbkfe -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770297475289_u9f4qbkfe</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Book: book_1770294885872_94bieazt1 -->
+  <url>
+    <loc>https://books.christfaculty.org/book/book_1770294885872_94bieazt1</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

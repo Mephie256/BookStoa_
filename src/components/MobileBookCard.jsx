@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAudio } from '../contexts/AudioContext';
 import { useAuth } from '../contexts/BetterAuthContext';
 import AuthModal from './AuthModal';
+import Spinner from './ui/Spinner';
 
 const MobileBookCard = ({ book }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -75,7 +76,7 @@ const MobileBookCard = ({ book }) => {
 
                             {!imageLoaded && !imageError && (
                                 <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-                                    <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                                    <Spinner size="lg" color="green" />
                                 </div>
                             )}
 

@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['icon.png', 'vite.svg'],
+        includeAssets: ['icon.png', 'favicon.png', 'vite.svg'],
         manifest: {
           name: 'Pneuma BookStore',
           short_name: 'Pneuma',
@@ -86,9 +86,22 @@ export default defineConfig(({ mode }) => {
           // We wrap this in a try-catch to log any startup errors
           try {
             const { auth } = await import('./src/lib/auth.js');
+            const { default: pesapalHandler } = await import('./api/pesapal/[...all].js');
             
             // Add middleware to handle better-auth routes
             server.middlewares.use(async (req, res, next) => {
+              if (req.url?.startsWith('/api/pesapal')) {
+                try {
+                  return await pesapalHandler(req, res);
+                } catch (error) {
+                  console.error('❌ Pesapal endpoint error:', error);
+                  res.statusCode = 500;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify({ error: error?.message || 'Internal server error' }));
+                  return;
+                }
+              }
+
               if (!req.url?.startsWith('/api/auth')) {
                 return next();
               }

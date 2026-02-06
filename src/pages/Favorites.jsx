@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Heart, Grid, List, Lock } from 'lucide-react';
+import { Grid, List, Lock } from 'lucide-react';
+import { CiBookmark } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import { Aurora } from '../components/ui/aurora';
@@ -107,7 +108,7 @@ const Favorites = () => {
           <div className="flex items-center justify-center min-h-screen px-4">
             <div className="text-center max-w-md">
               <div className="w-20 h-20 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Heart className="w-10 h-10 text-red-400" />
+                <CiBookmark className="w-12 h-12 text-red-400" />
               </div>
               <h1 className="text-3xl font-bold text-white mb-4">Sign In Required</h1>
               <p className="text-gray-400 mb-8 leading-relaxed">
@@ -222,7 +223,7 @@ const Favorites = () => {
                       onClick={() => removeFavorite(favorite.book_id || favorite.id)}
                       className="absolute top-2 right-2 w-8 h-8 bg-red-600/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-500 shadow-lg"
                     >
-                      <Heart className="w-4 h-4 text-white fill-current" />
+                      <CiBookmark className="w-5 h-5 text-white fill-current" />
                     </button>
                   </div>
                 ))}
@@ -231,13 +232,13 @@ const Favorites = () => {
           ) : (
             <div className="text-center py-16">
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 shadow-2xl border border-gray-700/50 max-w-md mx-auto">
-                <Heart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <CiBookmark className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">
                   {favoriteBooks.length === 0 ? 'No Favorites Yet' : 'No Books Found'}
                 </h3>
                 <p className="text-gray-400 mb-6">
                   {favoriteBooks.length === 0
-                    ? 'Start adding books to your favorites by clicking the heart icon on any book.'
+                    ? 'Start adding books to your favorites by clicking the bookmark icon on any book.'
                     : 'Try checking another book in your favorites.'
                   }
                 </p>

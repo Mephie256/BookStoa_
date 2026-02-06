@@ -22,6 +22,7 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import UploadBook from './pages/Admin/UploadBook';
 import BooksManagement from './pages/Admin/BooksManagement';
 import UsersManagement from './pages/Admin/UsersManagement';
+import PaymentCallback from './pages/PaymentCallback';
 
 
 function GsapRouteEffects() {
@@ -117,7 +118,9 @@ function App() {
             <Route path="/library" element={<Library />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/downloads" element={<Downloads />} />
-          <Route path="/settings" element={<Home />} />
+            <Route path="/settings" element={<Home />} />
+            {/* Payment callback route */}
+            <Route path="/payment/callback" element={<PaymentCallback />} />
           </Routes>
 
           {/* Global Audio Player - appears on all pages */}

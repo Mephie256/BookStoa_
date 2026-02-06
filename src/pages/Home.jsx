@@ -6,6 +6,7 @@ import LoaderOne from '../components/ui/loader-one';
 import { booksApi } from '../services/newApi';
 import { useAudio } from '../contexts/AudioContext';
 import { Aurora } from '../components/ui/aurora';
+import Seo from '../components/Seo';
 
 const Home = () => {
   const [books, setBooks] = useState([]);
@@ -45,6 +46,11 @@ const Home = () => {
 
   return (
     <div className="min-h-[100dvh] bg-gray-900 relative overflow-hidden">
+      <Seo
+        title="Pneuma BookStore | Christian Books & Audiobooks"
+        description="Discover life-changing Christian books and audiobooks. Browse featured titles, popular reads, and recently added resources for spiritual growth."
+        canonicalPath="/"
+      />
       {/* Dark Aurora Background - Full Coverage */}
       <div className="fixed inset-0 w-full h-full opacity-50 z-0">
         <Aurora

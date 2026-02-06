@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search as SearchIcon, Grid, List, X, Sparkles } from 'lucide-react';
+import { Grid, List, X, Sparkles } from 'lucide-react';
+import { FaSearch } from 'react-icons/fa';
 import BookCard from '../components/BookCard';
 import LoaderOne from '../components/ui/loader-one';
 import PageSearchBar from '../components/PageSearchBar';
 import { Aurora } from '../components/ui/aurora';
 import { booksApi } from '../services/newApi';
+import Seo from '../components/Seo';
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -95,6 +97,16 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+      <Seo
+        title={searchTerm ? `Search: ${searchTerm} | Pneuma BookStore` : 'Search | Pneuma BookStore'}
+        description={
+          searchTerm
+            ? `Search results for "${searchTerm}" on Pneuma BookStore. Discover Christian books and audiobooks.`
+            : 'Search Pneuma BookStore to discover Christian books and audiobooks by title, author, genre, and keywords.'
+        }
+        canonicalPath="/search"
+        robots={searchTerm ? 'noindex,follow' : 'index,follow'}
+      />
       {/* Aurora Background */}
       <div className="fixed inset-0 w-full h-full opacity-50 z-0">
         <Aurora
@@ -113,7 +125,7 @@ const Search = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <SearchIcon className="w-8 h-8 text-green-400" />
+              <FaSearch className="w-8 h-8 text-green-400" />
               <h1 className="text-4xl font-bold text-white">Search</h1>
             </div>
             <p className="text-gray-300 text-lg">Discover your next great read with intelligent search</p>
@@ -201,7 +213,7 @@ const Search = () => {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <SearchIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <FaSearch className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-white mb-2">No books found</h3>
                   <p className="text-gray-400 mb-6">
                     Try adjusting your search terms or filters

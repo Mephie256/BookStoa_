@@ -2,16 +2,6 @@ import { useState } from 'react';
 
 import {
 
-  Play,
-
-  Pause,
-
-  SkipBack,
-
-  SkipForward,
-
-  Heart,
-
   MoreHorizontal,
 
   ChevronDown,
@@ -28,7 +18,13 @@ import {
 
 } from 'lucide-react';
 
+import { FaPlay, FaPause, FaForward } from 'react-icons/fa';
+
+import { CiBookmark } from 'react-icons/ci';
+
 import { useAudio } from '../contexts/AudioContext';
+
+import Spinner from './ui/Spinner';
 
 
 
@@ -152,7 +148,7 @@ const MobileAudioPlayer = () => {
 
           {/* Track Info */}
 
-          <div className="relative">
+          <div className="relative w-12 h-12 flex-shrink-0">
 
             <img
 
@@ -160,7 +156,7 @@ const MobileAudioPlayer = () => {
 
               alt={currentTrack.title}
 
-              className="w-12 h-12 rounded-lg object-cover shadow-lg border border-gray-700/50"
+              className="w-full h-full rounded-lg object-cover shadow-lg border border-gray-700/50"
 
               onError={(e) => {
 
@@ -204,7 +200,7 @@ const MobileAudioPlayer = () => {
 
             >
 
-              <Heart className={`w-5 h-5 ${isLiked ? 'fill-green-400 text-green-400' : ''}`} />
+              <CiBookmark className={`w-6 h-6 ${isLiked ? 'fill-green-400 text-green-400' : ''}`} />
 
             </button>
 
@@ -226,15 +222,15 @@ const MobileAudioPlayer = () => {
 
               {isLoading ? (
 
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <Spinner size="sm" color="white" />
 
               ) : isPlaying ? (
 
-                <Pause className="w-5 h-5 text-white" />
+                <FaPause className="w-5 h-5 text-white" />
 
               ) : (
 
-                <Play className="w-5 h-5 text-white ml-0.5" />
+                <FaPlay className="w-5 h-5 text-white ml-0.5" />
 
               )}
 
@@ -330,7 +326,7 @@ const MobileAudioPlayer = () => {
 
           <div className="relative z-10 px-8 py-8">
 
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-gray-700/30">
+            <div className="w-full aspect-square rounded-2xl overflow-hidden shadow-2xl border border-gray-700/30 bg-gray-800">
 
               <img
 
@@ -376,7 +372,7 @@ const MobileAudioPlayer = () => {
 
               >
 
-                <Heart className={`w-7 h-7 ${isLiked ? 'fill-green-400 text-green-400' : 'text-gray-300 hover:text-white'}`} />
+                <CiBookmark className={`w-8 h-8 ${isLiked ? 'fill-green-400 text-green-400' : 'text-gray-300 hover:text-white'}`} />
 
               </button>
 
@@ -448,7 +444,7 @@ const MobileAudioPlayer = () => {
 
               <button className="p-3 hover:bg-gray-800/50 rounded-full transition-colors">
 
-                <SkipBack className="w-8 h-8 text-white" />
+                <FaForward className="w-7 h-7 text-white transform scale-x-[-1]" />
 
               </button>
 
@@ -464,15 +460,15 @@ const MobileAudioPlayer = () => {
 
                 {isLoading ? (
 
-                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <Spinner size="md" color="white" />
 
                 ) : isPlaying ? (
 
-                  <Pause className="w-8 h-8 text-white" />
+                  <FaPause className="w-7 h-7 text-white" />
 
                 ) : (
 
-                  <Play className="w-8 h-8 text-white ml-1" />
+                  <FaPlay className="w-7 h-7 text-white ml-1" />
 
                 )}
 
@@ -480,7 +476,7 @@ const MobileAudioPlayer = () => {
 
               <button className="p-3 hover:bg-gray-800/50 rounded-full transition-colors">
 
-                <SkipForward className="w-8 h-8 text-white" />
+                <FaForward className="w-7 h-7 text-white" />
 
               </button>
 

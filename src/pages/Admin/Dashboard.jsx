@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Plus,
-  BookOpen,
   Users,
   Download,
   TrendingUp,
@@ -11,6 +10,7 @@ import {
   Eye,
   Database
 } from 'lucide-react';
+import { FaBook } from 'react-icons/fa';
 import { Aurora } from '../../components/ui/aurora';
 import { useAuth } from '../../contexts/BetterAuthContext';
 import { useModal } from '../../contexts/ModalContext';
@@ -200,14 +200,14 @@ const AdminDashboard = () => {
             <button
               onClick={handleSeedDatabase}
               disabled={isSeeding}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-md font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Database className="w-4 h-4" />
               {isSeeding ? 'Seeding...' : 'Seed Database'}
             </button>
             <Link
               to="/admin/upload"
-              className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-2 rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
+              className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-2 rounded-md font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
             >
               <Plus className="w-4 h-4" />
               Upload New Book
@@ -224,7 +224,7 @@ const AdminDashboard = () => {
                 <p className="text-2xl font-bold text-white">{stats.totalBooks}</p>
               </div>
               <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-green-600/20">
-                <BookOpen className="w-6 h-6 text-green-400" />
+                <FaBook className="w-6 h-6 text-green-400" />
               </div>
             </div>
           </div>
@@ -281,11 +281,11 @@ const AdminDashboard = () => {
 
             <div className="space-y-4">
               {books.length > 0 ? books.slice(0, 5).map((book) => (
-                <div key={book.id} className="flex items-center gap-4 p-4 border border-gray-600/30 rounded-xl bg-gray-700/20 backdrop-blur-sm">
+                <div key={book.id} className="flex items-center gap-4 p-4 border border-gray-600/30 rounded-md bg-gray-700/20 backdrop-blur-sm">
                   <img
                     src={book.cover_file_url || book.coverUrl || '/placeholder-book.jpg'}
                     alt={book.title}
-                    className="w-12 h-16 rounded-lg object-cover"
+                    className="w-12 h-16 rounded-md object-cover"
                     onError={(e) => {
                       e.target.src = '/placeholder-book.jpg';
                     }}
@@ -325,7 +325,7 @@ const AdminDashboard = () => {
                   <p className="text-gray-400">No books found. Upload your first book!</p>
                   <Link
                     to="/admin/upload"
-                    className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                   >
                     <Plus className="w-4 h-4" />
                     Upload Book
@@ -405,7 +405,7 @@ const AdminDashboard = () => {
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-green-400" />
+                  <FaBook className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
                   <h3 className="font-medium text-white">Manage Books</h3>

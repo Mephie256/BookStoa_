@@ -123,7 +123,7 @@ const UsersManagement = () => {
                   placeholder="Search users by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 />
               </div>
             </div>
@@ -133,7 +133,7 @@ const UsersManagement = () => {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 >
                   <option value="all" className="bg-gray-800">All Status</option>
                   <option value="active" className="bg-gray-800">Active</option>
@@ -170,7 +170,7 @@ const UsersManagement = () => {
           ) : (
             <div className="space-y-4">
             {filteredUsers.map((user) => (
-              <div key={user.id} className="bg-gray-700/30 rounded-xl p-6 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
+              <div key={user.id} className="bg-gray-700/30 rounded-md p-6 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <UserAvatar user={user} size="md" />
@@ -215,7 +215,7 @@ const UsersManagement = () => {
                     </div>
 
                     <button
-                      className="p-2 text-gray-400 hover:text-green-400 transition-colors rounded-lg hover:bg-gray-600/30"
+                      className="p-2 text-gray-400 hover:text-green-400 transition-colors rounded-md hover:bg-gray-600/30"
                       title="View User Details"
                     >
                       <Eye className="w-4 h-4" />

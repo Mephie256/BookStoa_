@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Maximize2, Minimize2, Download } from 'lucide-react';
+import { X, ZoomIn, ZoomOut, Maximize2, Minimize2, Download } from 'lucide-react';
+import Spinner from './ui/Spinner';
 
 const PDFViewer = ({ book, isOpen, onClose }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -10,14 +11,47 @@ const PDFViewer = ({ book, isOpen, onClose }) => {
   const [error, setError] = useState(null);
   const [pdfSrc, setPdfSrc] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
-  const pdfUrl = book?.pdf_file_url || book?.pdfFileUrl || book?.pdf_url;
+  const pdfUrl = book?.pdf_file_url || book?.pdfFileUrl || book?.pdf_url || book?.pdfUrl;
+
+  const toInlinePdfUrl = (url) => {
+    if (!url || typeof url !== 'string') return url;
+
+    if (!url.includes('res.cloudinary.com')) return url;
+
+    let next = url;
+    next = next.replace('/upload/fl_attachment/', '/upload/');
+    next = next.replace(/\/upload\/fl_attachment:[^/]+\//, '/upload/');
+
+    next = next.replace('/raw/upload/fl_inline/', '/raw/upload/');
+
+    return next;
+  };
+
+  const inlinePdfUrl = toInlinePdfUrl(pdfUrl);
+  const effectivePdfUrl = inlinePdfUrl || pdfUrl;
+
+  const openExternally = () => {
+    if (!effectivePdfUrl) return;
+    const a = document.createElement('a');
+    a.href = effectivePdfUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.click();
+  };
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
     checkMobile();
+
+    const ua = typeof navigator !== 'undefined' ? (navigator.userAgent || '') : '';
+    const isiOSDevice = /iPad|iPhone|iPod/.test(ua);
+    const isiPadOS = ua.includes('Mac') && typeof document !== 'undefined' && 'ontouchend' in document;
+    setIsIOS(isiOSDevice || isiPadOS);
+
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -34,21 +68,33 @@ const PDFViewer = ({ book, isOpen, onClose }) => {
       setPdfSrc(null);
 
       try {
-        const cacheKey = new Request(pdfUrl, { cache: 'reload' });
+        if (isMobile || isIOS) {
+          setIsLoading(false);
+          return;
+        }
+
+        const cacheKey = new Request(effectivePdfUrl, { cache: 'reload' });
         let response = null;
 
         if (typeof caches !== 'undefined') {
-          const cache = await caches.open('bookstoa-pdf-cache-v1');
-          response = await cache.match(cacheKey);
-          if (!response) {
-            response = await fetch(pdfUrl, { mode: 'cors', credentials: 'omit' });
+          try {
+            const cache = await caches.open('bookstoa-pdf-cache-v1');
+            response = await cache.match(cacheKey);
+            if (!response) {
+              response = await fetch(effectivePdfUrl, { mode: 'cors', credentials: 'omit' });
+              if (!response.ok) {
+                throw new Error(`Failed to load PDF (${response.status})`);
+              }
+              await cache.put(cacheKey, response.clone());
+            }
+          } catch {
+            response = await fetch(effectivePdfUrl, { mode: 'cors', credentials: 'omit' });
             if (!response.ok) {
               throw new Error(`Failed to load PDF (${response.status})`);
             }
-            await cache.put(cacheKey, response.clone());
           }
         } else {
-          response = await fetch(pdfUrl, { mode: 'cors', credentials: 'omit' });
+          response = await fetch(effectivePdfUrl, { mode: 'cors', credentials: 'omit' });
           if (!response.ok) {
             throw new Error(`Failed to load PDF (${response.status})`);
           }
@@ -75,7 +121,7 @@ const PDFViewer = ({ book, isOpen, onClose }) => {
         URL.revokeObjectURL(objectUrl);
       }
     };
-  }, [isOpen, pdfUrl]);
+  }, [isOpen, pdfUrl, effectivePdfUrl, isMobile, isIOS]);
 
   const handleZoomIn = () => {
     setZoom(prev => Math.min(prev + 25, 200));
@@ -174,18 +220,28 @@ const PDFViewer = ({ book, isOpen, onClose }) => {
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
           )}
+          <button
+            onClick={openExternally}
+            className="p-2 text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors rounded-lg"
+            aria-label="Open PDF"
+          >
+            <Download className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
       {/* PDF Content */}
-      <div className="flex-1 flex items-center justify-center p-2 md:p-4 overflow-hidden bg-gray-950">
-        {isLoading ? (
+      <div
+        className="flex-1 flex items-center justify-center p-2 md:p-4 overflow-auto bg-gray-950"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
+        {isLoading && !isMobile ? (
           <div className="text-center p-4">
-            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <Spinner size="xl" color="green" />
             <p className="text-white text-base md:text-lg font-semibold mb-1">Loading PDF...</p>
             <p className="text-gray-400 text-xs md:text-sm">Please wait while we prepare your book</p>
           </div>
-        ) : error ? (
+        ) : error && !isMobile ? (
           <div className="text-center p-4 md:p-8 max-w-md">
             <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <X className="w-8 h-8 text-red-400" />
@@ -193,16 +249,42 @@ const PDFViewer = ({ book, isOpen, onClose }) => {
             <p className="text-white text-base md:text-lg font-semibold mb-2">PDF Viewer Issue</p>
             <p className="text-gray-400 text-xs md:text-sm mb-6">{error}</p>
             <button
-              onClick={onClose}
+              onClick={openExternally}
               className="px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-sm"
             >
-              Close
+              Open PDF
             </button>
+          </div>
+        ) : isMobile || isIOS ? (
+          <div className="w-full h-full flex flex-col">
+            {/* Mobile PDF Notice */}
+            <div className="bg-gray-800/90 backdrop-blur-xl p-4 mx-2 mt-2 rounded-lg border border-gray-700/50 shadow-lg">
+              <p className="text-white text-sm font-medium mb-2">📱 Mobile Reading</p>
+              <p className="text-gray-300 text-xs mb-3">
+                For the best reading experience on mobile, we recommend opening the PDF in your browser or a PDF reader app.
+              </p>
+              <button
+                onClick={openExternally}
+                className="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-sm text-sm"
+              >
+                Open in Browser
+              </button>
+            </div>
+            
+            {/* Embedded PDF Viewer */}
+            <div className="flex-1 relative mt-2">
+              <iframe
+                src={effectivePdfUrl}
+                className="w-full h-full rounded-none border-0 bg-white"
+                title={`${book.title} - PDF Viewer`}
+                style={{ minHeight: 'calc(100vh - 200px)' }}
+              />
+            </div>
           </div>
         ) : (
           <div className="w-full h-full relative max-w-7xl mx-auto">
             <iframe
-              src={`${pdfSrc || pdfUrl}#toolbar=${isMobile ? '0' : '1'}&navpanes=0&scrollbar=1&view=FitH`}
+              src={`${pdfSrc || effectivePdfUrl}#toolbar=1&navpanes=0&scrollbar=1&view=FitH`}
               className="w-full h-full rounded-none md:rounded-lg border-0 md:border md:border-gray-700/50 bg-white shadow-2xl"
               title={`${book.title} - PDF Viewer`}
               onLoad={() => {

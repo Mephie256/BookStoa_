@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
   Volume2,
-  Heart,
   Shuffle,
   Repeat,
   Smartphone,
   MoreHorizontal,
   List
 } from 'lucide-react';
+import { FaPlay, FaPause, FaForward } from 'react-icons/fa';
+import { CiBookmark } from 'react-icons/ci';
 import { useAudio } from '../contexts/AudioContext';
+import Spinner from './ui/Spinner';
 
 const GlobalAudioPlayer = () => {
   const {
@@ -56,22 +54,22 @@ const GlobalAudioPlayer = () => {
       <div className="flex items-center justify-between max-w-screen-xl mx-auto">
         {/* Left: Track Info */}
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="relative group cursor-pointer">
+          <div className="relative group cursor-pointer w-14 h-14 flex-shrink-0">
             <img
               src={currentTrack.cover_file_url || currentTrack.coverUrl || currentTrack.cover_url || currentTrack.image_url || currentTrack.thumbnail || 'https://via.placeholder.com/56x56/11b53f/ffffff?text=📖'}
               alt={currentTrack.title}
-              className="w-14 h-14 rounded-lg object-cover"
+              className="w-full h-full rounded-lg object-cover"
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/56x56/11b53f/ffffff?text=📖';
               }}
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <Spinner size="sm" color="white" />
               ) : isPlaying ? (
-                <Pause className="w-5 h-5 text-white" />
+                <FaPause className="w-4 h-4 text-white" />
               ) : (
-                <Play className="w-5 h-5 text-white" />
+                <FaPlay className="w-4 h-4 text-white" />
               )}
             </div>
           </div>
@@ -81,9 +79,9 @@ const GlobalAudioPlayer = () => {
                 {currentTrack.title}
               </h4>
               {isLoading && (
-                <div className="w-3 h-3 border border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                <Spinner size="sm" color="green" />
               )}
-              <Heart className="w-4 h-4 text-gray-400 hover:text-green-400 cursor-pointer transition-colors" />
+              <CiBookmark className="w-5 h-5 text-gray-400 hover:text-green-400 cursor-pointer transition-colors" />
             </div>
             <p className="text-gray-400 text-xs truncate hover:underline cursor-pointer">
               {currentTrack.author} {isLoading && '• Loading...'}
@@ -99,7 +97,7 @@ const GlobalAudioPlayer = () => {
               <Shuffle className="w-4 h-4" />
             </button>
             <button className="text-gray-400 hover:text-white transition-colors">
-              <SkipBack className="w-5 h-5" />
+              <FaForward className="w-4 h-4 transform scale-x-[-1]" />
             </button>
             <button
               onClick={togglePlayPause}
@@ -108,15 +106,15 @@ const GlobalAudioPlayer = () => {
               title={isLoading ? 'Loading...' : isPlaying ? 'Pause' : 'Play'}
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                <Spinner size="sm" color="black" />
               ) : isPlaying ? (
-                <Pause className="w-4 h-4 text-black" />
+                <FaPause className="w-4 h-4 text-black" />
               ) : (
-                <Play className="w-4 h-4 text-black ml-0.5" />
+                <FaPlay className="w-4 h-4 text-black ml-0.5" />
               )}
             </button>
             <button className="text-gray-400 hover:text-white transition-colors">
-              <SkipForward className="w-5 h-5" />
+              <FaForward className="w-4 h-4" />
             </button>
             <button className="text-gray-400 hover:text-white transition-colors">
               <Repeat className="w-4 h-4" />

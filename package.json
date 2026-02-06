@@ -8,9 +8,21 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "start": "node server.cjs",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "generate-sitemap": "node generate-sitemap.js",
+    "verify-seo": "node verify-seo.js",
+    "prebuild": "npm run generate-sitemap",
+    "cap:init": "cap init",
+    "cap:add:android": "cap add android",
+    "cap:add:ios": "cap add ios",
+    "cap:sync": "npm run build && cap sync",
+    "cap:open:android": "cap open android",
+    "cap:open:ios": "cap open ios",
+    "android": "npm run cap:sync && npm run cap:open:android",
+    "ios": "npm run cap:sync && npm run cap:open:ios"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
@@ -36,6 +48,7 @@
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",
     "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.2",
     "tailwindcss": "^4.1.10"
   },

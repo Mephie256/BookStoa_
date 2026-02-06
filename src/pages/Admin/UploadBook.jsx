@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Upload, X, FileText, Image, Headphones, Calendar, BookOpen, Globe, Star, Hash, Tag } from 'lucide-react';
+import { ArrowLeft, Upload, X, FileText, Image, Headphones, Calendar, BookOpen, Globe, Star, Hash, Tag, Plus } from 'lucide-react';
 import { Aurora } from '../../components/ui/aurora';
 import LoaderOne from '../../components/ui/loader-one';
 import { booksApi } from '../../services/newApi';
@@ -29,7 +29,7 @@ const UploadBook = () => {
   }
 
   // Predefined options
-  const genres = [
+  const [genres, setGenres] = useState([
     'Christian Living',
     'Devotional',
     'Theology',
@@ -50,9 +50,9 @@ const UploadBook = () => {
     'Missions',
     'Prophecy',
     'Spiritual Growth'
-  ];
+  ]);
 
-  const categories = [
+  const [categories, setCategories] = useState([
     'Featured',
     'Bestseller',
     'New Release',
@@ -61,22 +61,13 @@ const UploadBook = () => {
     'Academic',
     'Popular',
     'Reference'
-  ];
+  ]);
 
   const languages = [
     'English',
-    'Spanish',
+    'Swahili',
     'French',
-    'German',
-    'Portuguese',
-    'Italian',
-    'Dutch',
-    'Russian',
-    'Chinese',
-    'Japanese',
-    'Korean',
-    'Arabic',
-    'Hebrew'
+    'Luganda'
   ];
   const [formData, setFormData] = useState({
     // Basic Information
@@ -114,6 +105,8 @@ const UploadBook = () => {
     bestseller: false,
     newRelease: false
   });
+  const [newGenre, setNewGenre] = useState('');
+  const [newCategory, setNewCategory] = useState('');
   const [files, setFiles] = useState({
     pdfFile: null,
     coverImage: null
@@ -129,6 +122,24 @@ const UploadBook = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const handleAddGenre = () => {
+    if (newGenre.trim() && !genres.includes(newGenre.trim())) {
+      const updatedGenres = [...genres, newGenre.trim()].sort();
+      setGenres(updatedGenres);
+      setFormData(prev => ({ ...prev, genre: newGenre.trim() }));
+      setNewGenre('');
+    }
+  };
+
+  const handleAddCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      const updatedCategories = [...categories, newCategory.trim()].sort();
+      setCategories(updatedCategories);
+      setFormData(prev => ({ ...prev, category: newCategory.trim() }));
+      setNewCategory('');
+    }
   };
 
   const handleTagAdd = (tagText) => {
@@ -277,6 +288,8 @@ const UploadBook = () => {
         });
         setFiles({ coverImage: null, pdfFile: null });
         setPreviews({ coverImage: null });
+        setNewGenre('');
+        setNewCategory('');
 
         showSuccess('Book uploaded successfully! Cover and PDF are now stored in Cloudinary.', 'Upload Complete');
         navigate('/admin/books');
@@ -409,45 +422,105 @@ const UploadBook = () => {
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Genre Selection */}
                 <div>
                   <label htmlFor="genre" className="block text-sm font-medium text-white mb-2">
                     Genre *
                   </label>
-                  <select
-                    id="genre"
-                    name="genre"
-                    value={formData.genre}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
-                  >
-                    <option value="">Select Genre</option>
-                    {genres.map(genre => (
-                      <option key={genre} value={genre} className="bg-gray-800">
-                        {genre}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="space-y-3">
+                    {/* Dropdown */}
+                    <select
+                      id="genre"
+                      name="genre"
+                      value={formData.genre}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                    >
+                      <option value="">Select Genre</option>
+                      {genres.map(genre => (
+                        <option key={genre} value={genre} className="bg-gray-800">
+                          {genre}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    {/* Add New Genre */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newGenre}
+                        onChange={(e) => setNewGenre(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddGenre();
+                          }
+                        }}
+                        placeholder="Add new genre..."
+                        className="flex-1 px-4 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddGenre}
+                        disabled={!newGenre.trim()}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
+                {/* Category Selection */}
                 <div>
                   <label htmlFor="category" className="block text-sm font-medium text-white mb-2">
                     Category
                   </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
-                  >
-                    <option value="">Select Category</option>
-                    {categories.map(category => (
-                      <option key={category} value={category} className="bg-gray-800">
-                        {category}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="space-y-3">
+                    {/* Dropdown */}
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map(category => (
+                        <option key={category} value={category} className="bg-gray-800">
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    {/* Add New Category */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddCategory();
+                          }
+                        }}
+                        placeholder="Add new category..."
+                        className="flex-1 px-4 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCategory}
+                        disabled={!newCategory.trim()}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -734,9 +807,9 @@ const UploadBook = () => {
                       value={formData.price}
                       onChange={handleInputChange}
                       min="0"
-                      step="1000"
+                      step="1"
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
-                      placeholder="10000"
+                      placeholder="20"
                     />
                     <p className="text-xs text-gray-400 mt-1">Enter price in Ugandan Shillings (UGX)</p>
                   </div>

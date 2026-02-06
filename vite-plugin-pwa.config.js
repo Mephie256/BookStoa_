@@ -2,7 +2,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export const pwaConfig = VitePWA({
   registerType: 'autoUpdate',
-  includeAssets: ['icon.png', 'vite.svg'],
+  includeAssets: ['icon.png', 'vite.svg'], // Removed favicon.png from precaching
   manifest: {
     name: 'Pneuma BookStore',
     short_name: 'Pneuma',

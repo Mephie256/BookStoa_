@@ -12,10 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Environment files
-.env
-.env.*
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -26,3 +22,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+.env.*
+
+# Windsurf
+.windsurf/
+
+# Archives
+*.zip
+
+# Capacitor
+android/
+ios/
+.capacitor/
+
+# Build outputs
+dev-dist/

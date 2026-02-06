@@ -184,7 +184,7 @@ const BooksManagement = () => {
           </div>
           <Link
             to="/admin/upload"
-            className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-2 rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
+            className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-2 rounded-md font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg"
           >
             <Plus className="w-4 h-4" />
             Add New Book
@@ -202,7 +202,7 @@ const BooksManagement = () => {
                   placeholder="Search books by title or author..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 />
               </div>
             </div>
@@ -212,7 +212,7 @@ const BooksManagement = () => {
                 <select
                   value={filterGenre}
                   onChange={(e) => setFilterGenre(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-md text-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
                 >
                   {genres.map(genre => (
                     <option key={genre} value={genre} className="bg-gray-800">
@@ -234,7 +234,7 @@ const BooksManagement = () => {
             <button
               onClick={handleRefreshBooks}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200 shadow-lg disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-md font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200 shadow-lg disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               Refresh
@@ -253,12 +253,12 @@ const BooksManagement = () => {
           ) : filteredBooks.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBooks.map((book) => (
-                <div key={book.id} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
+                <div key={book.id} className="bg-gray-700/30 rounded-md p-4 border border-gray-600/30 hover:bg-gray-600/30 transition-all duration-200">
                   <div className="flex gap-4">
                     <img
                       src={book.cover_file_url || book.coverUrl || book.cover_url || book.image_url || 'https://via.placeholder.com/64x80/11b53f/ffffff?text=📖'}
                       alt={book.title}
-                      className="w-16 h-20 rounded-lg object-cover shadow-lg"
+                      className="w-16 h-20 rounded-md object-cover shadow-lg"
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/64x80/11b53f/ffffff?text=📖';
                       }}
@@ -276,21 +276,21 @@ const BooksManagement = () => {
                       <div className="flex gap-1">
                         <Link
                           to={`/book/${book.id}`}
-                          className="p-2 text-gray-400 hover:text-green-400 transition-colors rounded-lg hover:bg-gray-600/30"
+                          className="p-2 text-gray-400 hover:text-green-400 transition-colors rounded-md hover:bg-gray-600/30"
                           title="View Book"
                         >
                           <Eye className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => handleEditBook(book)}
-                          className="p-2 text-gray-400 hover:text-blue-400 transition-colors rounded-lg hover:bg-gray-600/30"
+                          className="p-2 text-gray-400 hover:text-blue-400 transition-colors rounded-md hover:bg-gray-600/30"
                           title="Edit Book"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteBook(book.id)}
-                          className="p-2 text-gray-400 hover:text-red-400 transition-colors rounded-lg hover:bg-gray-600/30"
+                          className="p-2 text-gray-400 hover:text-red-400 transition-colors rounded-md hover:bg-gray-600/30"
                           title="Delete Book"
                         >
                           <Trash2 className="w-4 h-4" />

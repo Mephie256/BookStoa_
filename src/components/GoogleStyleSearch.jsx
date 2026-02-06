@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, Clock, TrendingUp, Book, User, Tag, ArrowUpRight } from 'lucide-react';
 import { booksApi } from '../services/newApi';
+import Spinner from './ui/Spinner';
 
 const GoogleStyleSearch = ({
   placeholder = "Search books, authors, genres...",
@@ -253,7 +254,7 @@ const GoogleStyleSearch = ({
         <div className={styles.dropdown}>
           {loading && (
             <div className="p-4 text-center">
-              <div className="inline-block w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+              <Spinner size="sm" color="green" />
               <span className="ml-2 text-gray-400 text-sm">Searching...</span>
             </div>
           )}

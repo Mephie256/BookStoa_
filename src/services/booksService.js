@@ -15,7 +15,7 @@ export const booksService = {
                publisher, published_date, isbn, language, pages, rating, total_ratings,
                downloads, audio_link, preview_link, pdf_file_url, pdf_file_id,
                cover_file_url, cover_file_id, featured, bestseller, new_release,
-               created_at, updated_at
+               is_free, price, created_at, updated_at
         FROM books
         ORDER BY created_at DESC
       `;
@@ -83,7 +83,7 @@ export const booksService = {
                publisher, published_date, isbn, language, pages, rating, total_ratings,
                downloads, audio_link, preview_link, pdf_file_url, pdf_file_id,
                cover_file_url, cover_file_id, featured, bestseller, new_release,
-               created_at, updated_at
+               is_free, price, created_at, updated_at
         FROM books
         WHERE id = ${id}
       `;
@@ -108,13 +108,22 @@ export const booksService = {
     try {
       const bookId = `book_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
+      const isFree =
+        typeof bookData.is_free === 'boolean'
+          ? bookData.is_free
+          : typeof bookData.isFree === 'boolean'
+            ? bookData.isFree
+            : true;
+
+      const price = isFree ? 0 : (parseInt(bookData.price) || 0);
+
       const newBook = await sql`
         INSERT INTO books (
           id, title, author, description, full_description, genre, category, tags,
           publisher, published_date, isbn, language, pages, rating, total_ratings,
           downloads, audio_link, preview_link, pdf_file_url, pdf_file_id,
           cover_file_url, cover_file_id, featured, bestseller, new_release,
-          created_at, updated_at
+          is_free, price, created_at, updated_at
         ) VALUES (
           ${bookId}, ${bookData.title}, ${bookData.author}, ${bookData.description},
           ${bookData.fullDescription || bookData.full_description}, ${bookData.genre},
@@ -126,6 +135,7 @@ export const booksService = {
           ${bookData.pdfFileUrl || bookData.pdf_file_url}, ${bookData.pdfFileId || bookData.pdf_file_id},
           ${bookData.coverFileUrl || bookData.cover_file_url}, ${bookData.coverFileId || bookData.cover_file_id},
           ${bookData.featured || false}, ${bookData.bestseller || false}, ${bookData.newRelease || bookData.new_release || false},
+          ${isFree}, ${price},
           NOW(), NOW()
         )
         RETURNING *
@@ -152,6 +162,15 @@ export const booksService = {
   // Update book
   async update(id, bookData) {
     try {
+      const isFreeParam =
+        typeof bookData.is_free === 'boolean'
+          ? bookData.is_free
+          : typeof bookData.isFree === 'boolean'
+            ? bookData.isFree
+            : null;
+
+      const priceParam = Number.isFinite(Number(bookData.price)) ? parseInt(bookData.price) : null;
+
       const updatedBook = await sql`
         UPDATE books SET
           title = ${bookData.title},
@@ -174,6 +193,8 @@ export const booksService = {
           pdf_file_id = ${bookData.pdfFileId || bookData.pdf_file_id},
           cover_file_url = ${bookData.coverFileUrl || bookData.cover_file_url},
           cover_file_id = ${bookData.coverFileId || bookData.cover_file_id},
+          is_free = COALESCE(${isFreeParam}, is_free),
+          price = COALESCE(${priceParam}, price),
           featured = ${bookData.featured},
           bestseller = ${bookData.bestseller},
           new_release = ${bookData.newRelease || bookData.new_release},

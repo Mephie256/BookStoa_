@@ -22,6 +22,8 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
     totalRatings: '',
     audioLink: '',
     previewLink: '',
+    isFree: true,
+    price: '',
     featured: false,
     bestseller: false,
     newRelease: false
@@ -38,6 +40,7 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
 
   useEffect(() => {
     if (book && isOpen) {
+      const isFree = typeof book.is_free === 'boolean' ? book.is_free : (typeof book.isFree === 'boolean' ? book.isFree : true);
       setFormData({
         title: book.title || '',
         author: book.author || '',
@@ -55,6 +58,8 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
         totalRatings: book.total_ratings || book.totalRatings || '',
         audioLink: book.audio_link || book.audioLink || '',
         previewLink: book.preview_link || book.previewLink || '',
+        isFree,
+        price: String(book.price ?? ''),
         featured: book.featured || false,
         bestseller: book.bestseller || false,
         newRelease: book.new_release || book.newRelease || false
@@ -173,7 +178,9 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
         cover_file_url: coverFileUrl,
         cover_file_id: coverFileId,
         pdf_file_url: pdfFileUrl,
-        pdf_file_id: pdfFileId
+        pdf_file_id: pdfFileId,
+        is_free: formData.isFree,
+        price: formData.isFree ? 0 : (parseInt(formData.price) || 0),
       };
 
       console.log('📝 Processed update data:', updateData);
@@ -417,6 +424,40 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500"
               />
+            </div>
+          </div>
+
+          {/* Payment */}
+          <div className="bg-gray-700/20 border border-gray-600/50 rounded-xl p-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Payment</h3>
+
+            <div className="space-y-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="isFree"
+                  checked={formData.isFree}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500"
+                />
+                <span className="text-white">This book is free</span>
+              </label>
+
+              {!formData.isFree && (
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">Price (UGX)</label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    placeholder="20"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500"
+                  />
+                </div>
+              )}
             </div>
           </div>
 

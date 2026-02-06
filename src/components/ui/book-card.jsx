@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, Download, Heart, Play, BookOpen, Headphones, Lock } from 'lucide-react';
+import { Star, Download, Play, BookOpen, Headphones, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DownloadButton from '../DownloadButton';
 import FavoriteButton from '../FavoriteButton';

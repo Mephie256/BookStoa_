@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, Play, Download, Heart, Share, Headphones, BookOpen } from 'lucide-react';
+import { ArrowLeft, Star, Play, Download, Share, Headphones, BookOpen, CreditCard, Lock } from 'lucide-react';
 import LoaderOne from '../components/ui/loader-one';
 import DownloadButton from '../components/DownloadButton';
 import FavoriteButton from '../components/FavoriteButton';
 import PDFViewer from '../components/PDFViewer';
 import AuthModal from '../components/AuthModal';
+import PaymentModal from '../components/PaymentModal';
 
 import { booksApi, libraryApi } from '../services/newApi';
+import { paymentsService } from '../services/paymentsService';
 import { useAuth } from '../contexts/BetterAuthContext';
 import { useAudio } from '../contexts/AudioContext';
 import { useToast } from '../contexts/ToastContext';
 import { Aurora } from '../components/ui/aurora';
+import Seo from '../components/Seo';
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -23,6 +26,32 @@ const BookDetail = () => {
   const [error, setError] = useState(null);
   const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [checkingPayment, setCheckingPayment] = useState(false);
+
+  const toBool = (value) => {
+    if (value === true) return true;
+    if (value === false) return false;
+    if (value == null) return false;
+
+    if (typeof value === 'number') return value === 1;
+
+    if (typeof value === 'string') {
+      const v = value.trim().toLowerCase();
+      if (v === 'true' || v === '1' || v === 'yes' || v === 'y' || v === 't') return true;
+      if (v === 'false' || v === '0' || v === 'no' || v === 'n' || v === 'f' || v === '') return false;
+      return false;
+    }
+
+    return false;
+  };
+
+  const isFree = (book?.is_free != null || book?.isFree != null)
+    ? toBool(book?.is_free ?? book?.isFree)
+    : Number(book?.price || 0) <= 0;
+
+  const bookPdfUrl = book?.pdf_file_url || book?.pdfFileUrl || book?.pdf_url || book?.pdfUrl;
 
   // Handle audio play
   const handlePlayAudio = () => {
@@ -49,7 +78,18 @@ const BookDetail = () => {
 
   // Handle start reading
   const handleStartReading = () => {
-    if (book && (book.pdf_file_url || book.pdfFileUrl || book.pdf_url)) {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    // Check if book is paid and user hasn't paid
+    if (!isFree && !hasPaid) {
+      setShowPaymentModal(true);
+      return;
+    }
+
+    if (book && bookPdfUrl) {
       console.log('📖 Opening PDF viewer for:', book.title);
       setIsPDFViewerOpen(true);
     } else {
@@ -94,6 +134,28 @@ const BookDetail = () => {
           console.log('✅ Book fetched successfully:', bookData);
           setBook(bookData);
 
+          const bookIsFree = (bookData?.is_free != null || bookData?.isFree != null)
+            ? toBool(bookData?.is_free ?? bookData?.isFree)
+            : Number(bookData?.price || 0) <= 0;
+
+          // Check if user has paid for this book (if it's a paid book)
+          if (bookIsFree) {
+            setHasPaid(true); // Free books are always accessible
+          } else if (user) {
+            setCheckingPayment(true);
+            try {
+              const paymentCheck = await paymentsService.checkUserPaidForBook(user.id, bookData.id);
+              setHasPaid(Boolean(paymentCheck?.hasPaid));
+            } catch (e) {
+              console.error('❌ Payment check failed:', e);
+              setHasPaid(false);
+            } finally {
+              setCheckingPayment(false);
+            }
+          } else {
+            setHasPaid(false);
+          }
+
           // Automatically add to library when book is viewed
           await addToLibraryAutomatically(bookData);
         } else {
@@ -114,6 +176,11 @@ const BookDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+        <Seo
+          title="Loading Book... | Pneuma BookStore"
+          description="Loading book details on Pneuma BookStore."
+          canonicalPath={`/book/${id}`}
+        />
         <div className="fixed inset-0 w-full h-full opacity-50 z-0">
           <Aurora
             colorStops={["#0d8a2f", "#1f2937", "#11b53f"]}
@@ -141,6 +208,11 @@ const BookDetail = () => {
   if (error || !book) {
     return (
       <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+        <Seo
+          title="Book Not Found | Pneuma BookStore"
+          description="This book could not be found on Pneuma BookStore."
+          canonicalPath={`/book/${id}`}
+        />
         <div className="fixed inset-0 w-full h-full opacity-50 z-0">
           <Aurora
             colorStops={["#0d8a2f", "#1f2937", "#11b53f"]}
@@ -172,6 +244,52 @@ const BookDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+      <Seo
+        title={`${book.title} | Pneuma BookStore`}
+        description={(book.description || '').slice(0, 160) || `Read ${book.title} by ${book.author} on Pneuma BookStore.`}
+        canonicalPath={`/book/${book.id}`}
+        ogImage={book.cover_file_url || book.coverUrl || book.cover_url || book.image_url || undefined}
+        type="book"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Book',
+          name: book.title,
+          author: book.author ? { '@type': 'Person', name: book.author } : undefined,
+          description: book.description || undefined,
+          image: book.cover_file_url || book.coverUrl || book.cover_url || book.image_url || undefined,
+          isbn: book.isbn || undefined,
+          inLanguage: book.language || undefined,
+          numberOfPages: book.pages || undefined,
+          aggregateRating:
+            book.total_ratings && Number(book.total_ratings) > 0
+              ? {
+                  '@type': 'AggregateRating',
+                  ratingValue: Number(book.rating || 0),
+                  ratingCount: Number(book.total_ratings),
+                }
+              : undefined,
+          offers:
+            isFree
+              ? {
+                  '@type': 'Offer',
+                  price: 0,
+                  priceCurrency: 'UGX',
+                  availability: 'https://schema.org/InStock',
+                }
+              : {
+                  '@type': 'Offer',
+                  price: Number(book.price || 0),
+                  priceCurrency: 'UGX',
+                  availability: 'https://schema.org/InStock',
+                },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Pneuma BookStore',
+            url: 'https://books.christfaculty.org/',
+          },
+          url: `https://books.christfaculty.org/book/${book.id}`,
+        }}
+      />
       {/* Dark Aurora Background - Full Coverage */}
       <div className="fixed inset-0 w-full h-full opacity-50 z-0">
         <Aurora
@@ -223,19 +341,37 @@ const BookDetail = () => {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <button
-                  onClick={handleStartReading}
-                  disabled={!book || !(book.pdf_file_url || book.pdfFileUrl || book.pdf_url)}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white py-3 px-4 rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  {(book?.pdf_file_url || book?.pdfFileUrl || book?.pdf_url) ? 'Start Reading' : 'PDF Not Available'}
-                </button>
+                {/* Read/Purchase Button */}
+                {isFree || hasPaid ? (
+                  <button
+                    onClick={handleStartReading}
+                    disabled={!book || !bookPdfUrl}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white py-3 px-4 rounded-md font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    {bookPdfUrl ? 'Start Reading' : 'PDF Not Available'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (!user) {
+                        setShowAuthModal(true);
+                      } else {
+                        setShowPaymentModal(true);
+                      }
+                    }}
+                    disabled={checkingPayment}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white py-3 px-4 rounded-md font-medium hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-lg disabled:opacity-50"
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    {checkingPayment ? 'Checking...' : `Purchase for ${new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX', minimumFractionDigits: 0 }).format(book.price || 0)}`}
+                  </button>
+                )}
 
                 {(book.audio_link || book.audioLink) && (
                   <button
                     onClick={handlePlayAudio}
-                    className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 shadow-lg ${
+                    className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium transition-all duration-200 shadow-lg ${
                       user
                         ? 'bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600'
                         : 'bg-gradient-to-r from-gray-600 to-gray-500 text-white hover:from-gray-700 hover:to-gray-600'
@@ -246,12 +382,14 @@ const BookDetail = () => {
                   </button>
                 )}
 
-                <DownloadButton book={book} variant="full" showPreview={false} />
+                {(hasPaid || isFree) && (
+                  <DownloadButton book={book} variant="full" showPreview={false} />
+                )}
 
                 <FavoriteButton book={book} variant="full" />
 
                 <div className="flex gap-2">
-                  <button className="flex-1 flex items-center justify-center gap-2 border border-gray-600/50 text-gray-300 py-3 px-4 rounded-xl font-medium hover:bg-gray-700/30 hover:text-white transition-colors backdrop-blur-sm">
+                  <button className="flex-1 flex items-center justify-center gap-2 border border-gray-600/50 text-gray-300 py-3 px-4 rounded-md font-medium hover:bg-gray-700/30 hover:text-white transition-colors backdrop-blur-sm">
                     <Share className="w-4 h-4" />
                     Share
                   </button>
@@ -402,6 +540,14 @@ const BookDetail = () => {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         defaultMode="login"
+      />
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        book={book}
+        user={user}
       />
     </div>
   );

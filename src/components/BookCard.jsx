@@ -16,8 +16,13 @@ const BookCard = ({ book }) => {
 
     const coverUrl = getCoverUrl();
     const rating = book.rating || 4;
-    const isFree = book.is_free !== false && book.isFree !== false; // Default to true if not specified
-    const price = book.price || 0;
+    const price = Number(book.price || 0);
+    const isFree =
+        typeof book.is_free === 'boolean'
+            ? book.is_free
+            : typeof book.isFree === 'boolean'
+                ? book.isFree
+                : !(price > 0);
 
     // Format price in UGX
     const formatPrice = (amount) => {
